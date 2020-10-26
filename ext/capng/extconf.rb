@@ -20,7 +20,7 @@ includedir = RbConfig::CONFIG["includedir"]
 
 dir_config("capng", includedir, libdir)
 
-$LDFLAGS << " -lcap-ng "
+pkg_config("libcap-ng")
 $CFLAGS << " -Wall -std=c99 -fPIC "
 # $CFLAGS << " -g -O0"
 

@@ -1,5 +1,7 @@
 # Capng_c
 
+![Linux testing](https://github.com/cosmo0920/capng_c/workflows/Linux%20testing/badge.svg?branch=main)
+
 libcap-ng bindings for Ruby.
 
 ## Installation

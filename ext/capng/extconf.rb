@@ -24,5 +24,6 @@ $LDFLAGS << " -lcap-ng "
 $CFLAGS << " -Wall -std=c99 -fPIC "
 # $CFLAGS << " -g -O0"
 
+have_func("rb_sym2str", "ruby.h")
 have_func("capng_get_caps_fd", "cap-ng.h")
 create_makefile("capng/capng")

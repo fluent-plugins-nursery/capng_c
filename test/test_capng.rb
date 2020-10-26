@@ -125,7 +125,7 @@ class CapNGTest < ::Test::Unit::TestCase
       @capability = CapNG::Capability.new
     end
 
-    test "update" do
+    test "update with defined constants" do
       [CapNG::Capability::CHOWN,
        CapNG::Capability::DAC_OVERRIDE,
        CapNG::Capability::DAC_READ_SEARCH,
@@ -154,6 +154,96 @@ class CapNGTest < ::Test::Unit::TestCase
         name = @capability.to_name(cap)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
         assert_equal(name, permitted_text)
+
+        # effective / drop
+        @capng.fill(CapNG::Select::BOTH)
+        @capng.update(CapNG::Action::DROP,
+                      CapNG::Type::EFFECTIVE,
+                      cap)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_false @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+
+        # effective / re-add
+        @capng.update(CapNG::Action::ADD,
+                      CapNG::Type::EFFECTIVE,
+                      cap)
+        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
+      end
+    end
+
+    test "update with string capabilities" do
+      ["chown",
+       "dac_override",
+       "dac_read_search",
+       "fowner",
+       "fsetid",
+       "kill",
+      ].each do |cap|
+        # effective / add
+        @capng.clear(CapNG::Select::BOTH)
+        @capng.update(CapNG::Action::ADD,
+                      CapNG::Type::EFFECTIVE,
+                      cap)
+        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+        assert_equal(cap, permitted_text)
+
+        # bounding_set / add
+        @capng.update(CapNG::Action::ADD,
+                      CapNG::Type::BOUNDING_SET,
+                      cap)
+        assert_true @capng.have_capability?(CapNG::Type::BOUNDING_SET, cap)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::BOUNDS)
+
+        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+        assert_equal(cap, permitted_text)
+
+        # effective / drop
+        @capng.fill(CapNG::Select::BOTH)
+        @capng.update(CapNG::Action::DROP,
+                      CapNG::Type::EFFECTIVE,
+                      cap)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_false @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+
+        # effective / re-add
+        @capng.update(CapNG::Action::ADD,
+                      CapNG::Type::EFFECTIVE,
+                      cap)
+        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
+      end
+    end
+
+    test "update with symbol capabilities" do
+      [:chown,
+       :dac_override,
+       :dac_read_search,
+       :fowner,
+       :fsetid,
+       :kill,
+      ].each do |cap|
+        # effective / add
+        @capng.clear(CapNG::Select::BOTH)
+        @capng.update(CapNG::Action::ADD,
+                      CapNG::Type::EFFECTIVE,
+                      cap)
+        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+        assert_equal(cap.to_s, permitted_text)
+
+        # bounding_set / add
+        @capng.update(CapNG::Action::ADD,
+                      CapNG::Type::BOUNDING_SET,
+                      cap)
+        assert_true @capng.have_capability?(CapNG::Type::BOUNDING_SET, cap)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::BOUNDS)
+
+        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+        assert_equal(cap.to_s, permitted_text)
 
         # effective / drop
         @capng.fill(CapNG::Select::BOTH)

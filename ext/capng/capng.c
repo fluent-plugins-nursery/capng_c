@@ -94,15 +94,29 @@ rb_capng_get_caps_process(VALUE self)
 }
 
 static VALUE
-rb_capng_update(VALUE self, VALUE rb_action_set, VALUE rb_type, VALUE rb_capability)
+rb_capng_update(VALUE self, VALUE rb_action_set, VALUE rb_update_type, VALUE rb_capability_or_name)
 {
   int result = 0;
+  unsigned int capability = 0;
 
   Check_Type(rb_action_set, T_FIXNUM);
-  Check_Type(rb_type, T_FIXNUM);
-  Check_Type(rb_capability, T_FIXNUM);
+  Check_Type(rb_update_type, T_FIXNUM);
 
-  result = capng_update(NUM2UINT(rb_action_set), NUM2INT(rb_type), NUM2UINT(rb_capability));
+  switch (TYPE(rb_capability_or_name)) {
+  case T_SYMBOL:
+    capability = capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
+    break;
+  case T_STRING:
+    capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
+    break;
+  case T_FIXNUM:
+    capability = NUM2INT(rb_capability_or_name);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability constant");
+  }
+
+  result = capng_update(NUM2UINT(rb_action_set), NUM2INT(rb_update_type), capability);
 
   if (result == 0)
     return Qtrue;
@@ -162,11 +176,26 @@ rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_enum)
 }
 
 static VALUE
-rb_capng_have_capability_p(VALUE self, VALUE rb_type, VALUE rb_select_enum)
+rb_capng_have_capability_p(VALUE self, VALUE rb_update_type, VALUE rb_capability_or_name)
 {
   int result = 0;
+  unsigned int capability = 0;
 
-  result = capng_have_capability(NUM2INT(rb_type), NUM2INT(rb_select_enum));
+  switch (TYPE(rb_capability_or_name)) {
+  case T_SYMBOL:
+    capability = capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
+    break;
+  case T_STRING:
+    capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
+    break;
+  case T_FIXNUM:
+    capability = NUM2INT(rb_capability_or_name);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability constant");
+  }
+
+  result = capng_have_capability(NUM2INT(rb_update_type), capability);
 
   if (result == 1)
     return Qtrue;

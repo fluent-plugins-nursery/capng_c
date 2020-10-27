@@ -94,6 +94,13 @@ class CapNGTest < ::Test::Unit::TestCase
       assert @print.caps_numeric(CapNG::Print::BUFFER, CapNG::Select::CAPS)
       assert @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
     end
+
+    test "print operations with symbols" do
+      @print = CapNG::Print.new
+      @capng.fill(:both)
+      assert @print.caps_numeric(:buffer, :caps)
+      assert @print.caps_text(:buffer, :effective)
+    end
   end
 
   sub_test_case "Process operation" do
@@ -332,7 +339,7 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(:effective, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
-        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+        permitted_text = @print.caps_text(:buffer, :effective)
         assert_equal(cap.to_s, permitted_text)
 
         # bounding_set / add
@@ -342,7 +349,7 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(:bounding_set, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
-        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::BOUNDING_SET)
+        permitted_text = @print.caps_text(:buffer, :bounding_set)
         assert_equal(cap.to_s, permitted_text)
 
         # permitted / add
@@ -352,7 +359,7 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(:permitted, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
-        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
+        permitted_text = @print.caps_text(:buffer, :permitted)
         assert_equal(cap.to_s, permitted_text)
 
         # inheritable / add
@@ -362,7 +369,7 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(:inheritable, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
-        permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::INHERITABLE)
+        permitted_text = @print.caps_text(:buffer, :inheritable)
         assert_equal(cap.to_s, permitted_text)
 
         # effective / drop

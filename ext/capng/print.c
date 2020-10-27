@@ -52,16 +52,46 @@ rb_capng_print_initialize(VALUE self)
 }
 
 static VALUE
-rb_capng_print_caps_text(VALUE self, VALUE rb_where, VALUE rb_select_set)
+rb_capng_print_caps_text(VALUE self, VALUE rb_where_name_or_type, VALUE rb_capability_name_or_type)
 {
   char *result = NULL;
+  capng_type_t capability_type = 0;
+  capng_print_t print_type = 0;
 
-  switch (NUM2LONG(rb_where)) {
+  switch (TYPE(rb_capability_name_or_type)) {
+  case T_SYMBOL:
+    capability_type = capability_type_name_to_capability_type(RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
+    break;
+  case T_STRING:
+    capability_type = capability_type_name_to_capability_type(StringValuePtr(rb_capability_name_or_type));
+    break;
+  case T_FIXNUM:
+    capability_type = NUM2INT(rb_capability_name_or_type);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
+
+  switch (TYPE(rb_where_name_or_type)) {
+  case T_SYMBOL:
+    print_type = print_name_to_print_type(RSTRING_PTR(rb_sym2str(rb_where_name_or_type)));
+    break;
+  case T_STRING:
+    print_type = print_name_to_print_type(StringValuePtr(rb_where_name_or_type));
+    break;
+  case T_FIXNUM:
+    print_type = NUM2INT(rb_where_name_or_type);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a print type constant");
+  }
+
+  switch (print_type) {
   case CAPNG_PRINT_STDOUT:
-    capng_print_caps_text(CAPNG_PRINT_STDOUT, NUM2LONG(rb_select_set));
+    capng_print_caps_text(CAPNG_PRINT_STDOUT, capability_type);
     break;
   case CAPNG_PRINT_BUFFER:
-    result = capng_print_caps_text(CAPNG_PRINT_BUFFER, NUM2INT(rb_select_set));
+    result = capng_print_caps_text(CAPNG_PRINT_BUFFER, capability_type);
   }
 
   if (result)
@@ -71,16 +101,46 @@ rb_capng_print_caps_text(VALUE self, VALUE rb_where, VALUE rb_select_set)
 }
 
 static VALUE
-rb_capng_print_caps_numeric(VALUE self, VALUE rb_where, VALUE rb_select_set)
+rb_capng_print_caps_numeric(VALUE self, VALUE rb_where_name_or_type, VALUE rb_select_name_or_enum)
 {
   char *result = NULL;
+  capng_select_t select = 0;
+  capng_print_t print_type = 0;
 
-  switch (NUM2LONG(rb_where)) {
+  switch (TYPE(rb_where_name_or_type)) {
+  case T_SYMBOL:
+    print_type = print_name_to_print_type(RSTRING_PTR(rb_sym2str(rb_where_name_or_type)));
+    break;
+  case T_STRING:
+    print_type = print_name_to_print_type(StringValuePtr(rb_where_name_or_type));
+    break;
+  case T_FIXNUM:
+    print_type = NUM2INT(rb_where_name_or_type);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a print type constant");
+  }
+
+  switch (TYPE(rb_select_name_or_enum)) {
+  case T_SYMBOL:
+    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+    break;
+  case T_STRING:
+    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+    break;
+  case T_FIXNUM:
+    select = NUM2INT(rb_select_name_or_enum);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
+
+  switch (print_type) {
   case CAPNG_PRINT_STDOUT:
-    capng_print_caps_numeric(CAPNG_PRINT_STDOUT, NUM2INT(rb_select_set));
+    capng_print_caps_numeric(CAPNG_PRINT_STDOUT, select);
     break;
   case CAPNG_PRINT_BUFFER:
-    result = capng_print_caps_numeric(CAPNG_PRINT_BUFFER, NUM2LONG(rb_select_set));
+    result = capng_print_caps_numeric(CAPNG_PRINT_BUFFER, select);
   }
 
   if (result)

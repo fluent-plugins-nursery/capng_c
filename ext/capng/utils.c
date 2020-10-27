@@ -47,6 +47,18 @@ action_name_to_action_type(char *action_name)
   }
 }
 
+capng_print_t
+print_name_to_print_type(char *print_name)
+{
+  if (strcmp(print_name, "stdout") == 0) {
+    return CAPNG_PRINT_STDOUT;
+  } else if (strcmp(print_name, "buffer") == 0) {
+    return CAPNG_PRINT_BUFFER;
+  } else {
+    rb_raise(rb_eArgError, "unknown print name %s", print_name);
+  }
+}
+
 capng_type_t
 capability_type_name_to_capability_type(char *capability_name)
 {

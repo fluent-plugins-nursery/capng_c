@@ -162,7 +162,7 @@ rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
   if (result == 0)
     return Qtrue;
   else
-    return Qfalse;
+    rb_raise(rb_eRuntimeError, "Calling capng_change_id is failed with: (exitcode: %d)\n", result);
 }
 
 static VALUE

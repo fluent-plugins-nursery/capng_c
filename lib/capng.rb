@@ -34,10 +34,13 @@ class CapNG
 
   def update(action, type, capability_or_capability_array)
     if capability_or_capability_array.is_a?(Array) && !capability_or_capability_array.empty?
+      results = []
       capability_or_capability_array.each do |capability|
-        success = update_raw(action, type, capability)
-        return false if !success
+        result = update_raw(action, type, capability)
+        results << result
+        return results if !result
       end
+      results
     else
       update_raw(action, type, capability_or_capability_array)
     end

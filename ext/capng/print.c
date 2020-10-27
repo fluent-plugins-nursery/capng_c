@@ -67,7 +67,7 @@ rb_capng_print_caps_text(VALUE self, VALUE rb_where, VALUE rb_select_set)
   if (result)
     return rb_str_new2(result);
   else
-    return rb_str_new2("(NULL)");
+    return rb_str_new2("none");
 }
 
 static VALUE
@@ -86,7 +86,7 @@ rb_capng_print_caps_numeric(VALUE self, VALUE rb_where, VALUE rb_select_set)
   if (result)
     return rb_str_new2(result);
   else
-    return rb_str_new2("(NULL)");
+    return rb_str_new2("none");
 }
 
 void Init_capng_print(VALUE rb_cCapNG)

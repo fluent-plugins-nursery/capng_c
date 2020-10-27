@@ -87,6 +87,15 @@ class CapNGTest < ::Test::Unit::TestCase
     end
   end
 
+  sub_test_case "Print" do
+    test "print operations" do
+      @print = CapNG::Print.new
+      @capng.fill(CapNG::Select::BOTH)
+      assert @print.caps_numeric(CapNG::Print::BUFFER, CapNG::Select::CAPS)
+      assert @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+    end
+  end
+
   sub_test_case "Process operation" do
     test "current process" do
       assert_true @capng.caps_process

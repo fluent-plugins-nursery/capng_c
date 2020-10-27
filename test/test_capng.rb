@@ -75,6 +75,19 @@ class CapNGTest < ::Test::Unit::TestCase
       assert_equal CapNG::Result::NONE, @capng.have_capabilities?(CapNG::Select::BOUNDS)
       assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
     end
+
+    test "basic with symbols" do
+      @capng.clear(:both)
+      assert_equal CapNG::Result::NONE, @capng.have_capabilities?(:both)
+
+      @capng.fill(:both)
+      assert_equal CapNG::Result::FULL, @capng.have_capabilities?(:both)
+
+      @capng.clear(:both)
+      @capng.fill(:caps)
+      assert_equal CapNG::Result::NONE, @capng.have_capabilities?(:bounds)
+      assert_equal CapNG::Result::FULL, @capng.have_capabilities?(:caps)
+    end
   end
 
   sub_test_case "State" do
@@ -131,6 +144,22 @@ class CapNGTest < ::Test::Unit::TestCase
         @capability = CapNG::Capability.new
         assert_equal CapNG::Capability::DAC_OVERRIDE,
                      @capability.from_name(@print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE))
+      end
+    end
+
+    test "fd with symbols" do
+      Tempfile.create("capng-", mode: 0744) do |tf|
+        @capng.caps_file(tf)
+        @capng.clear(:both)
+
+        @capng.update(:add,
+                      :effective,
+                      :dac_read_search)
+        assert_true @capng.have_capability?(:effective, :dac_read_search)
+        @print = CapNG::Print.new
+        @capability = CapNG::Capability.new
+        assert_equal CapNG::Capability::DAC_READ_SEARCH,
+                     @capability.from_name(@print.caps_text(:buffer, :effective))
       end
     end
   end

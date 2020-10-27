@@ -325,13 +325,13 @@ class CapNGTest < ::Test::Unit::TestCase
        :kill,
       ].each do |cap|
         # effective / add
-        @capng.clear(CapNG::Select::BOTH)
+        @capng.clear(:both)
         result = @capng.update(:add,
                                :effective,
                                cap)
         assert_true result
         assert_true @capng.have_capability?(:effective, cap)
-        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
         assert_equal(cap.to_s, permitted_text)
 
@@ -341,7 +341,7 @@ class CapNGTest < ::Test::Unit::TestCase
                                cap)
         assert_true result
         assert_true @capng.have_capability?(:bounding_set, cap)
-        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::BOUNDS)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::BOUNDING_SET)
         assert_equal(cap.to_s, permitted_text)
 
@@ -351,7 +351,7 @@ class CapNGTest < ::Test::Unit::TestCase
                                cap)
         assert_true result
         assert_true @capng.have_capability?(:permitted, cap)
-        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
         assert_equal(cap.to_s, permitted_text)
 
@@ -361,17 +361,17 @@ class CapNGTest < ::Test::Unit::TestCase
                                cap)
         assert_true result
         assert_true @capng.have_capability?(:inheritable, cap)
-        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::INHERITABLE)
         assert_equal(cap.to_s, permitted_text)
 
         # effective / drop
-        @capng.fill(CapNG::Select::BOTH)
+        @capng.fill(:both)
         result = @capng.update(:drop,
                                :effective,
                                cap)
         assert_true result
-        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:caps)
         assert_false @capng.have_capability?(:effective, cap)
 
         # effective / re-add
@@ -380,7 +380,7 @@ class CapNGTest < ::Test::Unit::TestCase
                                cap)
         assert_true result
         assert_true @capng.have_capability?(:effective, cap)
-        assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
+        assert_equal CapNG::Result::FULL, @capng.have_capabilities?(:caps)
       end
     end
   end

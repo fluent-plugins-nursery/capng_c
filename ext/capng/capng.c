@@ -51,22 +51,85 @@ rb_capng_initialize(VALUE self)
   return Qnil;
 }
 
-static VALUE
-rb_capng_clear(VALUE self, VALUE rb_action_set)
-{
-  Check_Type(rb_action_set, T_FIXNUM);
 
-  capng_clear(NUM2INT(rb_action_set));
+static capng_select_t
+select_name_to_select_type(char *select_name)
+{
+  if (strcmp(select_name, "caps") == 0) {
+    return CAPNG_SELECT_CAPS;
+  } else if (strcmp(select_name, "bounds") == 0) {
+    return CAPNG_SELECT_BOUNDS;
+  } else if (strcmp(select_name, "both") == 0) {
+    return CAPNG_SELECT_BOTH;
+#if defined(CAPNG_SELECT_AMBIENT)
+  } else if (strcmp(select_name, "ambient") == 0) {
+    return CAPNG_SELECT_AMBIENT;
+#endif
+#if defined(CAPNG_SELECT_ALL)
+  } else if (strcmp(select_name, "all") == 0) {
+    return CAPNG_SELECT_ALL;
+#endif
+  } else {
+    rb_raise(rb_eArgError, "unknown select name %s", select_name);
+  }
+}
+
+static capng_act_t
+action_name_to_action_type(char *action_name)
+{
+  if (strcmp(action_name, "drop") == 0) {
+    return CAPNG_DROP;
+  } else if (strcmp(action_name, "add") == 0) {
+    return CAPNG_ADD;
+  } else {
+    rb_raise(rb_eArgError, "unknown action name %s", action_name);
+  }
+}
+
+static VALUE
+rb_capng_clear(VALUE self, VALUE rb_select_name_or_enum)
+{
+  capng_select_t select = 0;
+
+  switch (TYPE(rb_select_name_or_enum)) {
+  case T_SYMBOL:
+    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+    break;
+  case T_STRING:
+    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+    break;
+  case T_FIXNUM:
+    select = NUM2INT(rb_select_name_or_enum);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
+
+  capng_clear(select);
 
   return Qnil;
 }
 
 static VALUE
-rb_capng_fill(VALUE self, VALUE rb_action_set)
+rb_capng_fill(VALUE self, VALUE rb_select_name_or_enum)
 {
-  Check_Type(rb_action_set, T_FIXNUM);
+  capng_select_t select = 0;
 
-  capng_fill(NUM2INT(rb_action_set));
+  switch (TYPE(rb_select_name_or_enum)) {
+  case T_SYMBOL:
+    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+    break;
+  case T_STRING:
+    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+    break;
+  case T_FIXNUM:
+    select = NUM2INT(rb_select_name_or_enum);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
+
+  capng_fill(select);
 
   return Qnil;
 }
@@ -91,18 +154,6 @@ rb_capng_get_caps_process(VALUE self)
     return Qtrue;
   else
     return Qfalse;
-}
-
-static capng_act_t
-action_name_to_action_type(char *action_name)
-{
-  if (strcmp(action_name, "drop") == 0) {
-    return CAPNG_DROP;
-  } else if (strcmp(action_name, "add") == 0) {
-    return CAPNG_ADD;
-  } else {
-    rb_raise(rb_eArgError, "unknown action name %s", action_name);
-  }
 }
 
 static capng_type_t
@@ -226,11 +277,25 @@ rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
 }
 
 static VALUE
-rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_enum)
+rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_name_or_enum)
 {
   int result = 0;
+  capng_select_t select = 0;
 
-  result = capng_have_capabilities(NUM2INT(rb_select_enum));
+  switch (TYPE(rb_select_name_or_enum)) {
+  case T_SYMBOL:
+    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+    break;
+  case T_STRING:
+    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+    break;
+  case T_FIXNUM:
+    select = NUM2INT(rb_select_name_or_enum);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
+  result = capng_have_capabilities(select);
 
   return INT2NUM(result);
 }

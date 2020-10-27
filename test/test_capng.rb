@@ -134,6 +134,44 @@ class CapNGTest < ::Test::Unit::TestCase
       @capability = CapNG::Capability.new
     end
 
+    data("symbols" => [[:chown, :dac_override, :dac_read_search, :sys_time],
+                       "chown, dac_override, dac_read_search, sys_time"],
+         "strings" => [["chown", "dac_read_search", "sys_boot"],
+                       "chown, dac_read_search, sys_boot"],
+         "constants" => [[CapNG::Capability::CHOWN, CapNG::Capability::FSETID, CapNG::Capability::NET_ADMIN],
+                         "chown, fsetid, net_admin"],
+        )
+    test "update with multiple capabilities" do |data|
+      capabilities, permitted = data
+      @capng.clear(CapNG::Select::BOTH)
+      # effective | inheritable | permitted / add
+      @capng.update(CapNG::Action::ADD,
+                    CapNG::Type::EFFECTIVE | CapNG::Type::INHERITABLE | CapNG::Type::PERMITTED,
+                    capabilities)
+      assert_equal permitted, @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+      assert_equal permitted, @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::INHERITABLE)
+      assert_equal permitted, @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
+      capabilities.each do |capability|
+        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, capability)
+        assert_true @capng.have_capability?(CapNG::Type::INHERITABLE, capability)
+        assert_true @capng.have_capability?(CapNG::Type::PERMITTED, capability)
+      end
+
+      # effective | inheritable | permitted / drop
+      @capng.update(CapNG::Action::DROP,
+                    CapNG::Type::EFFECTIVE | CapNG::Type::INHERITABLE | CapNG::Type::PERMITTED,
+                    capabilities)
+      assert_equal "none", @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
+      assert_equal "none", @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::INHERITABLE)
+      assert_equal "none", @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
+
+      capabilities.each do |capability|
+        assert_false @capng.have_capability?(CapNG::Type::EFFECTIVE, capability)
+        assert_false @capng.have_capability?(CapNG::Type::INHERITABLE, capability)
+        assert_false @capng.have_capability?(CapNG::Type::PERMITTED, capability)
+      end
+    end
+
     test "update with defined constants" do
       [CapNG::Capability::CHOWN,
        CapNG::Capability::DAC_OVERRIDE,

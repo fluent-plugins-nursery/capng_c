@@ -6,6 +6,7 @@ class CapNG
 
   alias_method :caps_file_raw, :caps_file
   alias_method :apply_caps_file_raw, :apply_caps_file
+  alias_method :update_raw, :update
 
   def caps_file(file_or_string_path)
     if file_or_string_path.is_a?(String) && File.exist?(file_or_string_path)
@@ -28,6 +29,16 @@ class CapNG
       apply_caps_file_raw(file_or_string_path)
     else
       raise ArgumentError, "#{file_or_string_path} should be File class or String class instance."
+    end
+  end
+
+  def update(action, type, capability_or_capability_array)
+    if capability_or_capability_array.is_a?(Array) && !capability_or_capability_array.empty?
+      capability_or_capability_array.each do |capability|
+        update_raw(action, type, capability)
+      end
+    else
+      update_raw(action, type, capability_or_capability_array)
     end
   end
 end

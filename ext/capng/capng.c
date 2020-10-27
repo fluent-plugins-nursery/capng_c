@@ -93,14 +93,74 @@ rb_capng_get_caps_process(VALUE self)
     return Qfalse;
 }
 
+static capng_act_t
+action_name_to_action_type(char *action_name)
+{
+  if (strcmp(action_name, "drop") == 0) {
+    return CAPNG_DROP;
+  } else if (strcmp(action_name, "add") == 0) {
+    return CAPNG_ADD;
+  } else {
+    rb_raise(rb_eArgError, "unknown action name %s", action_name);
+  }
+}
+
+static capng_type_t
+capability_type_name_to_capability_type(char *capability_name)
+{
+  if (strcmp(capability_name, "effective") == 0) {
+    return CAPNG_EFFECTIVE;
+  } else if (strcmp(capability_name, "permitted") == 0) {
+    return CAPNG_PERMITTED;
+  } else if (strcmp(capability_name, "inheritable") == 0) {
+    return CAPNG_INHERITABLE;
+  } else if (strcmp(capability_name, "bounding_set") == 0) {
+    return CAPNG_BOUNDING_SET;
+#if defined(CAPNG_AMBIENT)
+  } else if (strcmp(capability_name, "ambient") == 0) {
+    return CAPNG_AMBIENT;
+#endif
+  } else {
+    rb_raise(rb_eArgError, "unknown capability name: %s", capability_name);
+  }
+}
+
 static VALUE
-rb_capng_update(VALUE self, VALUE rb_action_set, VALUE rb_update_type, VALUE rb_capability_or_name)
+rb_capng_update(VALUE self,
+                VALUE rb_action_name_or_action, VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
 {
   int result = 0;
   unsigned int capability = 0;
+  capng_type_t capability_type = 0;
+  capng_act_t action = 0;
 
-  Check_Type(rb_action_set, T_FIXNUM);
-  Check_Type(rb_update_type, T_FIXNUM);
+  switch (TYPE(rb_action_name_or_action)) {
+  case T_SYMBOL:
+    action = action_name_to_action_type(RSTRING_PTR(rb_sym2str(rb_action_name_or_action)));
+    break;
+  case T_STRING:
+    action = action_name_to_action_type(StringValuePtr(rb_action_name_or_action));
+    break;
+  case T_FIXNUM:
+    action = NUM2INT(rb_action_name_or_action);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
+
+  switch (TYPE(rb_capability_name_or_type)) {
+  case T_SYMBOL:
+    capability_type = capability_type_name_to_capability_type(RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
+    break;
+  case T_STRING:
+    capability_type = capability_type_name_to_capability_type(StringValuePtr(rb_capability_name_or_type));
+    break;
+  case T_FIXNUM:
+    capability_type = NUM2INT(rb_capability_name_or_type);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
 
   switch (TYPE(rb_capability_or_name)) {
   case T_SYMBOL:
@@ -116,7 +176,7 @@ rb_capng_update(VALUE self, VALUE rb_action_set, VALUE rb_update_type, VALUE rb_
     rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability constant");
   }
 
-  result = capng_update(NUM2UINT(rb_action_set), NUM2INT(rb_update_type), capability);
+  result = capng_update(action, capability_type, capability);
 
   if (result == 0)
     return Qtrue;
@@ -176,10 +236,25 @@ rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_enum)
 }
 
 static VALUE
-rb_capng_have_capability_p(VALUE self, VALUE rb_update_type, VALUE rb_capability_or_name)
+rb_capng_have_capability_p(VALUE self, VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
 {
   int result = 0;
   unsigned int capability = 0;
+  capng_type_t capability_type = 0;
+
+  switch (TYPE(rb_capability_name_or_type)) {
+  case T_SYMBOL:
+    capability_type = capability_type_name_to_capability_type(RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
+    break;
+  case T_STRING:
+    capability_type = capability_type_name_to_capability_type(StringValuePtr(rb_capability_name_or_type));
+    break;
+  case T_FIXNUM:
+    capability_type = NUM2INT(rb_capability_name_or_type);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
 
   switch (TYPE(rb_capability_or_name)) {
   case T_SYMBOL:
@@ -195,7 +270,7 @@ rb_capng_have_capability_p(VALUE self, VALUE rb_update_type, VALUE rb_capability
     rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability constant");
   }
 
-  result = capng_have_capability(NUM2INT(rb_update_type), capability);
+  result = capng_have_capability(capability_type, capability);
 
   if (result == 1)
     return Qtrue;

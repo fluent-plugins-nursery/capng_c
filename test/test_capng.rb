@@ -326,60 +326,60 @@ class CapNGTest < ::Test::Unit::TestCase
       ].each do |cap|
         # effective / add
         @capng.clear(CapNG::Select::BOTH)
-        result = @capng.update(CapNG::Action::ADD,
-                               CapNG::Type::EFFECTIVE,
+        result = @capng.update(:add,
+                               :effective,
                                cap)
         assert_true result
-        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_true @capng.have_capability?(:effective, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE)
         assert_equal(cap.to_s, permitted_text)
 
         # bounding_set / add
-        result = @capng.update(CapNG::Action::ADD,
-                               CapNG::Type::BOUNDING_SET,
+        result = @capng.update(:add,
+                               :bounding_set,
                                cap)
         assert_true result
-        assert_true @capng.have_capability?(CapNG::Type::BOUNDING_SET, cap)
+        assert_true @capng.have_capability?(:bounding_set, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::BOUNDS)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::BOUNDING_SET)
         assert_equal(cap.to_s, permitted_text)
 
         # permitted / add
-        result = @capng.update(CapNG::Action::ADD,
-                               CapNG::Type::PERMITTED,
+        result = @capng.update(:add,
+                               :permitted,
                                cap)
         assert_true result
-        assert_true @capng.have_capability?(CapNG::Type::PERMITTED, cap)
+        assert_true @capng.have_capability?(:permitted, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
         assert_equal(cap.to_s, permitted_text)
 
         # inheritable / add
-        result = @capng.update(CapNG::Action::ADD,
-                               CapNG::Type::INHERITABLE,
+        result = @capng.update(:add,
+                               :inheritable,
                                cap)
         assert_true result
-        assert_true @capng.have_capability?(CapNG::Type::INHERITABLE, cap)
+        assert_true @capng.have_capability?(:inheritable, cap)
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
         permitted_text = @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::INHERITABLE)
         assert_equal(cap.to_s, permitted_text)
 
         # effective / drop
         @capng.fill(CapNG::Select::BOTH)
-        result = @capng.update(CapNG::Action::DROP,
-                               CapNG::Type::EFFECTIVE,
+        result = @capng.update(:drop,
+                               :effective,
                                cap)
         assert_true result
         assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::CAPS)
-        assert_false @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_false @capng.have_capability?(:effective, cap)
 
         # effective / re-add
-        result = @capng.update(CapNG::Action::ADD,
-                               CapNG::Type::EFFECTIVE,
+        result = @capng.update(:add,
+                               :effective,
                                cap)
         assert_true result
-        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
+        assert_true @capng.have_capability?(:effective, cap)
         assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
       end
     end

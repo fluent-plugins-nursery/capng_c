@@ -226,13 +226,26 @@ rb_capng_update(VALUE self,
 }
 
 static VALUE
-rb_capng_apply(VALUE self, VALUE rb_action_set)
+rb_capng_apply(VALUE self, VALUE rb_select_name_or_enum)
 {
   int result = 0;
+  capng_select_t select = 0;
 
-  Check_Type(rb_action_set, T_FIXNUM);
+  switch (TYPE(rb_select_name_or_enum)) {
+  case T_SYMBOL:
+    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+    break;
+  case T_STRING:
+    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+    break;
+  case T_FIXNUM:
+    select = NUM2INT(rb_select_name_or_enum);
+    break;
+  default:
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+  }
 
-  result = capng_apply(NUM2INT(rb_action_set));
+  result = capng_apply(select);
 
   if (result == 0)
     return Qtrue;

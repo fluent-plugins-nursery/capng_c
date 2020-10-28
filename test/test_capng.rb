@@ -117,49 +117,106 @@ class CapNGTest < ::Test::Unit::TestCase
   end
 
   sub_test_case "Process operation" do
-    test "current process" do
-      assert_true @capng.caps_process
+    sub_test_case "w/o initialize args" do
+      test "current process" do
+        assert_true @capng.caps_process
+      end
+
+      test "init" do
+        # set process id as init
+        @capng.setpid(1)
+        assert_true @capng.caps_process
+        @print = CapNG::Print.new
+        assert @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
+      end
     end
 
-    test "init" do
-      # set process id as init
-      @capng.setpid(1)
-      assert_true @capng.caps_process
-      @print = CapNG::Print.new
-      assert @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
+    sub_test_case "w/ initialize args" do
+      test "current_process" do
+        assert_nothing_raised do
+          CapNG.new(:current_process)
+        end
+      end
+
+      test "init with initialize args" do
+        # set process id as init
+        capng = CapNG.new(:other_process, 1)
+        assert_true capng.caps_process
+        @print = CapNG::Print.new
+        assert @print.caps_text(CapNG::Print::BUFFER, CapNG::Type::PERMITTED)
+      end
     end
   end
 
   sub_test_case "File descriptor operation" do
-    test "fd" do
-      Tempfile.create("capng-", mode: 0744) do |tf|
-        @capng.caps_file(tf)
-        @capng.clear(CapNG::Select::BOTH)
+    sub_test_case "w/o initialize args" do
+      setup do
+        @capng = CapNG.new
+      end
 
-        @capng.update(CapNG::Action::ADD,
-                      CapNG::Type::EFFECTIVE,
-                      CapNG::Capability::DAC_OVERRIDE)
-        assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, CapNG::Capability::DAC_OVERRIDE)
-        @print = CapNG::Print.new
-        @capability = CapNG::Capability.new
-        assert_equal CapNG::Capability::DAC_OVERRIDE,
-                     @capability.from_name(@print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE))
+      test "fd" do
+        Tempfile.create("capng-", mode: 0744) do |tf|
+          @capng.caps_file(tf)
+          @capng.clear(CapNG::Select::BOTH)
+
+          @capng.update(CapNG::Action::ADD,
+                        CapNG::Type::EFFECTIVE,
+                        CapNG::Capability::DAC_OVERRIDE)
+          assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, CapNG::Capability::DAC_OVERRIDE)
+          @print = CapNG::Print.new
+          @capability = CapNG::Capability.new
+          assert_equal CapNG::Capability::DAC_OVERRIDE,
+                       @capability.from_name(@print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE))
+        end
+      end
+      test "fd with symbols" do
+        Tempfile.create("capng-", mode: 0744) do |tf|
+          @capng.caps_file(tf)
+          @capng.clear(:both)
+
+          @capng.update(:add,
+                        :effective,
+                        :dac_read_search)
+          assert_true @capng.have_capability?(:effective, :dac_read_search)
+          @print = CapNG::Print.new
+          @capability = CapNG::Capability.new
+          assert_equal CapNG::Capability::DAC_READ_SEARCH,
+                       @capability.from_name(@print.caps_text(:buffer, :effective))
+        end
       end
     end
 
-    test "fd with symbols" do
-      Tempfile.create("capng-", mode: 0744) do |tf|
-        @capng.caps_file(tf)
-        @capng.clear(:both)
+    sub_test_case "w/ initialize args" do
+      test "fd" do
+        Tempfile.create("capng-", mode: 0744) do |tf|
+          capng = CapNG.new(:file, tf)
+          capng.clear(CapNG::Select::BOTH)
 
-        @capng.update(:add,
-                      :effective,
-                      :dac_read_search)
-        assert_true @capng.have_capability?(:effective, :dac_read_search)
-        @print = CapNG::Print.new
-        @capability = CapNG::Capability.new
-        assert_equal CapNG::Capability::DAC_READ_SEARCH,
-                     @capability.from_name(@print.caps_text(:buffer, :effective))
+          capng.update(CapNG::Action::ADD,
+                       CapNG::Type::EFFECTIVE,
+                       CapNG::Capability::DAC_OVERRIDE)
+          assert_true capng.have_capability?(CapNG::Type::EFFECTIVE, CapNG::Capability::DAC_OVERRIDE)
+          @print = CapNG::Print.new
+          @capability = CapNG::Capability.new
+          assert_equal CapNG::Capability::DAC_OVERRIDE,
+                       @capability.from_name(@print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE))
+        end
+      end
+
+      test "fd with symbols" do
+        Tempfile.create("capng-", mode: 0744) do |tf|
+          capng = CapNG.new(:file, tf)
+          capng.clear(:both)
+
+          capng.update(:add,
+                       :effective,
+                       :dac_read_search)
+          assert_true capng.have_capability?(:effective, :dac_read_search)
+          @print = CapNG::Print.new
+          @capability = CapNG::Capability.new
+          assert_equal CapNG::Capability::DAC_READ_SEARCH,
+                       @capability.from_name(@print.caps_text(:buffer, :effective))
+        end
       end
     end
   end

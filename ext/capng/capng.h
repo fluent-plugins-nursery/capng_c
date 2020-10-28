@@ -20,6 +20,9 @@
 
 #include <cap-ng.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 VALUE rb_cCapNG;
 VALUE rb_cCapNGPrint;

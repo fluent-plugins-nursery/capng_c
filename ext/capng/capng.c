@@ -46,8 +46,53 @@ rb_capng_alloc(VALUE klass)
 }
 
 static VALUE
-rb_capng_initialize(VALUE self)
+rb_capng_initialize(int argc, VALUE *argv, VALUE self)
 {
+  VALUE rb_target, rb_pid_or_file;
+  int result = 0;
+  char *target = NULL;
+  int pid = 0, fd = 0;
+  rb_io_t *fptr = NULL;
+
+  rb_scan_args(argc, argv, "02", &rb_target, &rb_pid_or_file);
+
+  if (NIL_P(rb_target)) {
+    return Qnil;
+  }
+
+  if (RB_TYPE_P(rb_target, T_SYMBOL)) {
+    target = RSTRING_PTR(rb_sym2str(rb_target));
+  } else if (RB_TYPE_P(rb_target, T_STRING)) {
+    target = StringValuePtr(rb_target);
+  } else {
+    rb_raise(rb_eArgError, "Expected a String or a Symbol instance for tagret argument");
+  }
+
+  if (strcmp(target, "current_process") == 0) {
+    result = capng_get_caps_process();
+    if (result != 0) {
+      rb_raise(rb_eRuntimeError, "Couldn't get current process' capability");
+    }
+  } else if (strcmp(target, "other_process") == 0) {
+    Check_Type(rb_pid_or_file, T_FIXNUM);
+
+    pid = NUM2INT(rb_pid_or_file);
+    capng_setpid(pid);
+    result = capng_get_caps_process();
+    if (result != 0) {
+      rb_raise(rb_eRuntimeError, "Couldn't get current process' capability");
+    }
+  } else if (strcmp(target, "file") == 0) {
+    Check_Type(rb_pid_or_file, T_FILE);
+
+    fptr = RFILE(rb_pid_or_file)->fptr;
+    fd = fptr->fd;
+    result = capng_get_caps_fd(fd);
+    if (result != 0) {
+      rb_raise(rb_eRuntimeError, "Couldn't get current file capability");
+    }
+  }
+
   return Qnil;
 }
 
@@ -339,7 +384,7 @@ Init_capng(void)
 
   rb_define_alloc_func(rb_cCapNG, rb_capng_alloc);
 
-  rb_define_method(rb_cCapNG, "initialize", rb_capng_initialize, 0);
+  rb_define_method(rb_cCapNG, "initialize", rb_capng_initialize, -1);
   rb_define_method(rb_cCapNG, "clear", rb_capng_clear, 1);
   rb_define_method(rb_cCapNG, "fill", rb_capng_fill, 1);
   rb_define_method(rb_cCapNG, "setpid", rb_capng_setpid, 1);

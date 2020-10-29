@@ -10,16 +10,14 @@ class CapNG
   alias_method :initialize_raw, :initialize
 
   def initialize(target = nil, pid_or_path = nil)
-    if target.nil?
-      initialize_raw
-    elsif target && pid_or_path.is_a?(Integer)
+    if target && pid_or_path.is_a?(Integer)
       initialize_raw(target, pid_or_path)
     elsif target && pid_or_path.is_a?(String) && File.exist?(pid_or_path)
       File.open(pid_or_path) do |file|
         initialize_raw(target, file);
       end
     else
-      initialize_raw
+      initialize_raw(target, pid_or_path)
     end
   end
 

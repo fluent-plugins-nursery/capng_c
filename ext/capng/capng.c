@@ -88,12 +88,18 @@ rb_capng_initialize(int argc, VALUE *argv, VALUE self)
     fptr = RFILE(rb_pid_or_file)->fptr;
     fd = fptr->fd;
     result = capng_get_caps_fd(fd);
-    if (result != 0) {
-      rb_raise(rb_eRuntimeError, "Couldn't get current file capability");
-    }
+    /* Just store result into instance variable. */
+    /* This is because capng_get_caps_fd should return 0 if file cap is not set. */
+    rb_iv_set(self, "@return_code", INT2NUM(result));
   }
 
   return Qnil;
+}
+
+static VALUE
+rb_capng_return_code(VALUE self)
+{
+  return rb_iv_get(self, "@return_code");
 }
 
 static VALUE
@@ -398,6 +404,7 @@ Init_capng(void)
   rb_define_alloc_func(rb_cCapNG, rb_capng_alloc);
 
   rb_define_method(rb_cCapNG, "initialize", rb_capng_initialize, -1);
+  rb_define_method(rb_cCapNG, "return_code", rb_capng_return_code, 0);
   rb_define_method(rb_cCapNG, "clear", rb_capng_clear, 1);
   rb_define_method(rb_cCapNG, "fill", rb_capng_fill, 1);
   rb_define_method(rb_cCapNG, "setpid", rb_capng_setpid, 1);

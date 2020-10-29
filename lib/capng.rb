@@ -15,8 +15,8 @@ class CapNG
     elsif target && pid_or_path.is_a?(Integer)
       initialize_raw(target, pid_or_path)
     elsif target && pid_or_path.is_a?(String) && File.exist?(pid_or_path)
-      File.open(pid_or_path) do
-        initialize_raw(target, pid_or_path);
+      File.open(pid_or_path) do |file|
+        initialize_raw(target, file);
       end
     else
       initialize_raw
@@ -38,7 +38,7 @@ class CapNG
   def apply_caps_file(file_or_string_path)
     if file_or_string_path.is_a?(String) && File.exist?(file_or_string_path)
       File.open(file_or_string_path) do |f|
-        apply_cps_file_raw(f)
+        apply_caps_file_raw(f)
       end
     elsif file_or_string_path.is_a?(File)
       apply_caps_file_raw(file_or_string_path)

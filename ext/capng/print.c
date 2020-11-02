@@ -151,7 +151,7 @@ rb_capng_print_caps_numeric(VALUE self, VALUE rb_where_name_or_type, VALUE rb_se
 
 void Init_capng_print(VALUE rb_cCapNG)
 {
-  rb_cCapNGPrint = rb_define_class_under(rb_cCapNG, "Print", rb_cObject);
+  VALUE rb_cCapNGPrint = rb_define_class_under(rb_cCapNG, "Print", rb_cObject);
 
   rb_define_alloc_func(rb_cCapNGPrint, rb_capng_print_alloc);
 

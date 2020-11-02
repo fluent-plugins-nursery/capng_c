@@ -90,7 +90,7 @@ rb_capng_state_restore(VALUE self)
 void
 Init_capng_state(VALUE rb_cCapNG)
 {
-  rb_cState = rb_define_class_under(rb_cCapNG, "State", rb_cObject);
+  VALUE rb_cState = rb_define_class_under(rb_cCapNG, "State", rb_cObject);
 
   rb_define_alloc_func(rb_cState, rb_capng_state_alloc);
 

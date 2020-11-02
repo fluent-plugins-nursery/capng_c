@@ -24,16 +24,16 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-VALUE rb_cCapNG;
-VALUE rb_cCapNGPrint;
-VALUE rb_cCapability;
-VALUE rb_cState;
-VALUE rb_mAction;
-VALUE rb_mSelect;
-VALUE rb_mType;
-VALUE rb_mResult;
-VALUE rb_mPrint;
-VALUE rb_mFlags;
+extern VALUE rb_cCapNG;
+extern VALUE rb_cCapNGPrint;
+extern VALUE rb_cCapability;
+extern VALUE rb_cState;
+extern VALUE rb_mAction;
+extern VALUE rb_mSelect;
+extern VALUE rb_mType;
+extern VALUE rb_mResult;
+extern VALUE rb_mPrint;
+extern VALUE rb_mFlags;
 
 capng_select_t select_name_to_select_type(char *select_name);
 capng_act_t action_name_to_action_type(char *action_name);

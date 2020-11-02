@@ -83,7 +83,7 @@ rb_capng_capability_from_name(VALUE self, VALUE rb_capability_name_or_symbol)
 void
 Init_capng_capability(VALUE rb_cCapNG)
 {
-  rb_cCapability = rb_define_class_under(rb_cCapNG, "Capability", rb_cObject);
+  VALUE rb_cCapability = rb_define_class_under(rb_cCapNG, "Capability", rb_cObject);
 
   rb_define_alloc_func(rb_cCapability, rb_capng_capability_alloc);
 

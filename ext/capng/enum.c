@@ -15,11 +15,11 @@
 
 void Init_capng_enum(VALUE rb_cCapNG)
 {
-  rb_mAction = rb_define_module_under(rb_cCapNG, "Action");
-  rb_mSelect = rb_define_module_under(rb_cCapNG, "Select");
-  rb_mType = rb_define_module_under(rb_cCapNG, "Type");
-  rb_mResult = rb_define_module_under(rb_cCapNG, "Result");
-  rb_mFlags = rb_define_module_under(rb_cCapNG, "Flags");
+  VALUE rb_mAction = rb_define_module_under(rb_cCapNG, "Action");
+  VALUE rb_mSelect = rb_define_module_under(rb_cCapNG, "Select");
+  VALUE rb_mType = rb_define_module_under(rb_cCapNG, "Type");
+  VALUE rb_mResult = rb_define_module_under(rb_cCapNG, "Result");
+  VALUE rb_mFlags = rb_define_module_under(rb_cCapNG, "Flags");
 
   // capng_cat_t enum constants
   rb_define_const(rb_mAction, "DROP", INT2NUM(CAPNG_DROP));

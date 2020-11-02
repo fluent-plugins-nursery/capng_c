@@ -399,7 +399,7 @@ rb_capng_apply_caps_file(VALUE self, VALUE rb_file)
 void
 Init_capng(void)
 {
-  rb_cCapNG = rb_define_class("CapNG", rb_cObject);
+  VALUE rb_cCapNG = rb_define_class("CapNG", rb_cObject);
 
   rb_define_alloc_func(rb_cCapNG, rb_capng_alloc);
 

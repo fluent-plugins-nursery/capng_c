@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{libcap-ng bindings for Ruby.}
   spec.description   = spec.summary
   spec.homepage      = "https://github.com/cosmo0920/cap-ng_c"
-
+  spec.license       = "Apache-2.0"
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage

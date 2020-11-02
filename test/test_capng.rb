@@ -58,7 +58,9 @@ class CapNGTest < ::Test::Unit::TestCase
       assert CapNG::Flags::NO_FLAG
       assert CapNG::Flags::DROP_SUPP_GRP
       assert CapNG::Flags::CLEAR_BOUNDING
-      assert CapNG::Flags::INIT_SUPP_GRP
+      if defined?(CapNG::Flags::INIT_SUPP_GRP)
+        assert CapNG::Flags::INIT_SUPP_GRP
+      end
     end
   end
 

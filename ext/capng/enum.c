@@ -29,10 +29,10 @@ void Init_capng_enum(VALUE rb_cCapNG)
   rb_define_const(rb_mSelect, "CAPS", INT2NUM(CAPNG_SELECT_CAPS));
   rb_define_const(rb_mSelect, "BOUNDS", INT2NUM(CAPNG_SELECT_BOUNDS));
   rb_define_const(rb_mSelect, "BOTH", INT2NUM(CAPNG_SELECT_BOTH));
-#if defined(CAPNG_SELECT_AMBIENT)
+#if defined(HAVE_CONST_CAPNG_SELECT_AMBIENT)
   rb_define_const(rb_mSelect, "AMBIENT", INT2NUM(CAPNG_SELECT_AMBIENT));
 #endif
-#if defined(CAPNG_SELECT_ALL)
+#if defined(HAVE_CONST_CAPNG_SELECT_ALL)
   rb_define_const(rb_mSelect, "ALL", INT2NUM(CAPNG_SELECT_ALL));
 #endif
 
@@ -41,7 +41,7 @@ void Init_capng_enum(VALUE rb_cCapNG)
   rb_define_const(rb_mType, "PERMITTED", INT2NUM(CAPNG_PERMITTED));
   rb_define_const(rb_mType, "INHERITABLE", INT2NUM(CAPNG_INHERITABLE));
   rb_define_const(rb_mType, "BOUNDING_SET", INT2NUM(CAPNG_BOUNDING_SET));
-#if defined(CAPNG_AMBIENT)
+#if defined(HAVE_CONST_CAPNG_AMBIENT)
   rb_define_const(rb_mType, "AMBIENT", INT2NUM(CAPNG_AMBIENT));
 #endif
 
@@ -55,7 +55,7 @@ void Init_capng_enum(VALUE rb_cCapNG)
   rb_define_const(rb_mFlags, "NO_FLAG", LONG2NUM(CAPNG_NO_FLAG));
   rb_define_const(rb_mFlags, "DROP_SUPP_GRP", LONG2NUM(CAPNG_DROP_SUPP_GRP));
   rb_define_const(rb_mFlags, "CLEAR_BOUNDING", LONG2NUM(CAPNG_CLEAR_BOUNDING));
-#if defined(CAPNG_INIT_SUPP_GRP)
+#if defined(HAVE_CONST_CAPNG_INIT_SUPP_GRP)
   // Ubuntu Trusty's libcap-ng-dev doesn't have CAPNG_INIT_SUPP_GRP constant.
   rb_define_const(rb_mFlags, "INIT_SUPP_GRP", LONG2NUM(CAPNG_INIT_SUPP_GRP));
 #endif

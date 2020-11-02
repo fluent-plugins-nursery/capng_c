@@ -22,11 +22,11 @@ select_name_to_select_type(char *select_name)
     return CAPNG_SELECT_BOUNDS;
   } else if (strcmp(select_name, "both") == 0) {
     return CAPNG_SELECT_BOTH;
-#if defined(CAPNG_SELECT_AMBIENT)
+#if defined(HAVE_CONST_CAPNG_SELECT_AMBIENT)
   } else if (strcmp(select_name, "ambient") == 0) {
     return CAPNG_SELECT_AMBIENT;
 #endif
-#if defined(CAPNG_SELECT_ALL)
+#if defined(HAVE_CONST_CAPNG_SELECT_ALL)
   } else if (strcmp(select_name, "all") == 0) {
     return CAPNG_SELECT_ALL;
 #endif
@@ -70,7 +70,7 @@ capability_type_name_to_capability_type(char *capability_name)
     return CAPNG_INHERITABLE;
   } else if (strcmp(capability_name, "bounding_set") == 0) {
     return CAPNG_BOUNDING_SET;
-#if defined(CAPNG_AMBIENT)
+#if defined(HAVE_CONST_CAPNG_AMBIENT)
   } else if (strcmp(capability_name, "ambient") == 0) {
     return CAPNG_AMBIENT;
 #endif

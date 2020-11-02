@@ -24,6 +24,10 @@ pkg_config("libcap-ng")
 $CFLAGS << " -Wall -std=c99 -fPIC "
 # $CFLAGS << " -g -O0"
 
+have_const("CAPNG_SELECT_AMBIENT", "cap-ng.h")
+have_const("CAPNG_SELECT_ALL", "cap-ng.h")
+have_const("CAPNG_AMBIENT", "cap-ng.h")
+have_const("CAPNG_INIT_SUPP_GRP", "cap-ng.h")
 have_func("rb_sym2str", "ruby.h")
 have_func("capng_get_caps_fd", "cap-ng.h")
 create_makefile("capng/capng")

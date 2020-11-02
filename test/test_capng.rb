@@ -33,6 +33,9 @@ class CapNGTest < ::Test::Unit::TestCase
       assert CapNG::Select::CAPS
       assert CapNG::Select::BOUNDS
       assert CapNG::Select::BOTH
+      if defined?(CapNG::Select::AMBIENT)
+        assert CapNG::Select::AMBIENT
+      end
     end
 
     test "effective" do
@@ -40,6 +43,9 @@ class CapNGTest < ::Test::Unit::TestCase
       assert CapNG::Type::PERMITTED
       assert CapNG::Type::INHERITABLE
       assert CapNG::Type::BOUNDING_SET
+      if defined?(CapNG::Type::AMBIENT)
+        assert CapNG::Type::AMBIENT
+      end
     end
 
     test "result" do
@@ -340,6 +346,16 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
         assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
+
+        # ambient / add | if available
+        if defined?(CapNG::Type::AMBIENT)
+          result = @capng.update(CapNG::Action::ADD,
+                                 CapNG::Type::AMBIENT,
+                                 cap)
+          assert_true result
+          assert_true @capng.have_capability?(CapNG::Type::AMBIENT, cap)
+          assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::AMBIENT)
+        end
       end
     end
 
@@ -408,6 +424,16 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(CapNG::Type::EFFECTIVE, cap)
         assert_equal CapNG::Result::FULL, @capng.have_capabilities?(CapNG::Select::CAPS)
+
+        # ambient / add | if available
+        if defined?(CapNG::Type::AMBIENT)
+          result = @capng.update(CapNG::Action::ADD,
+                                 CapNG::Type::AMBIENT,
+                                 cap)
+          assert_true result
+          assert_true @capng.have_capability?(CapNG::Type::AMBIENT, cap)
+          assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(CapNG::Select::AMBIENT)
+        end
       end
     end
 
@@ -476,6 +502,16 @@ class CapNGTest < ::Test::Unit::TestCase
         assert_true result
         assert_true @capng.have_capability?(:effective, cap)
         assert_equal CapNG::Result::FULL, @capng.have_capabilities?(:caps)
+
+        # ambient / add | if available
+        if defined?(CapNG::Type::AMBIENT)
+          result = @capng.update(:add,
+                                 :ambient,
+                                 cap)
+          assert_true result
+          assert_true @capng.have_capability?(:ambient, cap)
+          assert_equal CapNG::Result::PARTIAL, @capng.have_capabilities?(:ambient)
+        end
       end
     end
   end

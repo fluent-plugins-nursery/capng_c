@@ -1,4 +1,4 @@
-name: Linux testing
+name: Multiple Ruby version tests
 on:
   - push
   - pull_request

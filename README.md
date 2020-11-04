@@ -6,6 +6,16 @@
 
 libcap-ng bindings for Ruby.
 
+## Prerequisites
+
+* pkg-config package for linking libcap-ng library
+* libcap-ng and its development packages
+  * libcap-ng-dev on Debian GNU/Linux and Ubuntu
+  * libcap-ng-devel on CentOS 7/8, Fedora 33, AmazonLinux 2
+* Ruby and its development packages
+  * ruby-dev on Debian GNU/Linux and Ubuntu
+  * ruby-devel on CentOS 7/8, Fedora 33, AmazonLinux 2
+
 ## Installation
 
 Add this line to your application's Gemfile:

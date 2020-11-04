@@ -1,0 +1,39 @@
+name: Yum based Linux
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    name: Build
+    strategy:
+      fail-fast: false
+      matrix:
+        label:
+          - CentOS 7 x86_64
+          - CentOS 8 x86_64
+          - Fedora 33 x86_64
+          - AmazonLinux 2 x86_64
+        include:
+          - label: CentOS 7 x86_64
+            test-docker-image: centos:7
+            test-script: ci/yum-test.sh
+          - label: CentOS 8 x86_64
+            test-docker-image: centos:8
+            test-script: ci/yum-test.sh
+          - label: Fedora 33 x86_64
+            test-docker-image: fedora:33
+            test-script: ci/yum-test.sh
+          - label: AmazonLinux 2 x86_64
+            test-docker-image: amazonlinux:2
+            test-script: ci/yum-test.sh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: rake compile & rake test
+        run: |
+          docker run \
+          --rm \
+          --tty \
+          --volume ${PWD}:/capng \
+          ${{ matrix.test-docker-image }} \
+          /capng/${{ matrix.test-script }}

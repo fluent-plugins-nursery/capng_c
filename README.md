@@ -1,6 +1,8 @@
 # Capng_c
 
-![Linux testing](https://github.com/cosmo0920/capng_c/workflows/Linux%20testing/badge.svg?branch=main)
+![Multiple Ruby version tests](https://github.com/cosmo0920/capng_c/workflows/Multiple%20Ruby%20version%20tests/badge.svg?branch=main)
+![Apt based Linux](https://github.com/cosmo0920/capng_c/workflows/Apt%20based%20Linux/badge.svg?branch=main)
+![Yum based Linux](https://github.com/cosmo0920/capng_c/workflows/Yum%20based%20Linux/badge.svg?branch=main)
 
 libcap-ng bindings for Ruby.
 

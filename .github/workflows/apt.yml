@@ -1,0 +1,35 @@
+name: Apt based Linux
+on:
+  push:
+  pull_request:
+jobs:
+  build:
+    name: Build
+    strategy:
+      fail-fast: false
+      matrix:
+        label:
+          - Debian GNU/Linux Buster amd64
+          - Ubuntu Bionic amd64
+          - Ubuntu Focal amd64
+        include:
+          - label: Debian GNU/Linux Buster amd64
+            test-docker-image: debian:buster
+            test-script: ci/apt-test.sh
+          - label: Ubuntu Bionic amd64
+            test-docker-image: ubuntu:bionic
+            test-script: ci/apt-test.sh
+          - label: Ubuntu Focal amd64
+            test-docker-image: ubuntu:focal
+            test-script: ci/apt-test.sh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: rake compile & rake test
+        run: |
+          docker run \
+          --rm \
+          --tty \
+          --volume ${PWD}:/capng \
+          ${{ matrix.test-docker-image }} \
+          /capng/${{ matrix.test-script }}

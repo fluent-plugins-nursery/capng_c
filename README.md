@@ -1,8 +1,8 @@
 # Capng_c
 
-![Multiple Ruby version tests](https://github.com/cosmo0920/capng_c/workflows/Multiple%20Ruby%20version%20tests/badge.svg?branch=main)
-![Apt based Linux](https://github.com/cosmo0920/capng_c/workflows/Apt%20based%20Linux/badge.svg?branch=main)
-![Yum based Linux](https://github.com/cosmo0920/capng_c/workflows/Yum%20based%20Linux/badge.svg?branch=main)
+![Multiple Ruby version tests](https://github.com/fluent-plugins-nursery/capng_c/workflows/Multiple%20Ruby%20version%20tests/badge.svg?branch=main)
+![Apt based Linux](https://github.com/fluent-plugins-nursery/capng_c/workflows/Apt%20based%20Linux/badge.svg?branch=main)
+![Yum based Linux](https://github.com/fluent-plugins-nursery/capng_c/workflows/Yum%20based%20Linux/badge.svg?branch=main)
 
 libcap-ng bindings for Ruby.
 
@@ -44,4 +44,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/cosmo0920/capng_c.
+Bug reports and pull requests are welcome on GitHub at https://github.com/fluent-plugins-nursery/capng_c.

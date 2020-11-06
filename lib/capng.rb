@@ -4,10 +4,10 @@ require "capng/version"
 class CapNG
   class Error < StandardError; end
 
-  alias_method :caps_file_raw, :caps_file
-  alias_method :apply_caps_file_raw, :apply_caps_file
-  alias_method :update_raw, :update
-  alias_method :initialize_raw, :initialize
+  alias_method :caps_file_raw, :caps_file # :nodoc:
+  alias_method :apply_caps_file_raw, :apply_caps_file # :nodoc:
+  alias_method :update_raw, :update # :nodoc:
+  alias_method :initialize_raw, :initialize # :nodoc:
 
   def initialize(target = nil, pid_or_path = nil)
     if target && pid_or_path.is_a?(Integer)

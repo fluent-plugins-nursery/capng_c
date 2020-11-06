@@ -355,6 +355,14 @@ rb_capng_lock(VALUE self)
     return Qfalse;
 }
 
+/*
+ *  Change the credentials retaining capabilities.
+  * @param rb_uid [Fixnum] User ID.
+  * @param rb_gid [Fixnum] Group ID.
+  * @param rb_flags [Fixnum] CapNG::Flags constants.
+  *
+  * @see capng_change_id(3)
+ */
 static VALUE
 rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
 {

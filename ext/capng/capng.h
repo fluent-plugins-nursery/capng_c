@@ -42,6 +42,11 @@ capng_type_t capability_type_name_to_capability_type(char *capability_name);
 
 void Init_capng_capability(VALUE);
 void Init_capng_enum(VALUE);
+void Init_capng_enum_action(VALUE);
+void Init_capng_enum_flags(VALUE);
+void Init_capng_enum_result(VALUE);
+void Init_capng_enum_select(VALUE);
+void Init_capng_enum_type(VALUE);
 void Init_capng_print(VALUE);
 void Init_capng_state(VALUE);
 #endif // _CAPNG_H

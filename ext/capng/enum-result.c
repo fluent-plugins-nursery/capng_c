@@ -11,13 +11,23 @@
 /* See the License for the specific language governing permissions and */
 /* limitations under the License. */
 
+/* clang-format off */
+/*
+ * Document-module: CapNG::Result
+ *
+ * Define FAIL, NONE, PARTAIL, and FULL constants.
+ */
+/* clang-format on */
+
 #include <capng.h>
 
-void Init_capng_enum(VALUE rb_cCapNG)
+void Init_capng_enum_result(VALUE rb_cCapNG)
 {
-  Init_capng_enum_action(rb_cCapNG);
-  Init_capng_enum_flags(rb_cCapNG);
-  Init_capng_enum_result(rb_cCapNG);
-  Init_capng_enum_select(rb_cCapNG);
-  Init_capng_enum_type(rb_cCapNG);
+  VALUE rb_mResult = rb_define_module_under(rb_cCapNG, "Result");
+
+  // capng_result_t enum constants
+  rb_define_const(rb_mResult, "FAIL", LONG2NUM(CAPNG_FAIL));
+  rb_define_const(rb_mResult, "NONE", LONG2NUM(CAPNG_NONE));
+  rb_define_const(rb_mResult, "PARTIAL", LONG2NUM(CAPNG_PARTIAL));
+  rb_define_const(rb_mResult, "FULL", LONG2NUM(CAPNG_FULL));
 }

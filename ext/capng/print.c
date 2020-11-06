@@ -11,6 +11,15 @@
 /* See the License for the specific language governing permissions and */
 /* limitations under the License. */
 
+/* clang-format off */
+/*
+ * Document-class: CapNG::Print
+ *
+ * Print Linux capabitlities.
+ */
+/* clang-format on */
+
+
 #include <capng.h>
 
 struct CapNGPrint {};

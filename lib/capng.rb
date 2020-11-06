@@ -2,6 +2,7 @@ require "capng/capng"
 require "capng/version"
 
 class CapNG
+  # Predefined Error class.
   class Error < StandardError; end
 
   alias_method :caps_file_raw, :caps_file # :nodoc:

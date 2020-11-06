@@ -26,11 +26,16 @@ void Init_capng_enum_type(VALUE rb_cCapNG)
   VALUE rb_mType = rb_define_module_under(rb_cCapNG, "Type");
 
   // capng_type_t enum constants
+  /* Effective type */
   rb_define_const(rb_mType, "EFFECTIVE", INT2NUM(CAPNG_EFFECTIVE));
+  /* Permitted type */
   rb_define_const(rb_mType, "PERMITTED", INT2NUM(CAPNG_PERMITTED));
+  /* Inheritable type */
   rb_define_const(rb_mType, "INHERITABLE", INT2NUM(CAPNG_INHERITABLE));
+  /* Bounding Set type */
   rb_define_const(rb_mType, "BOUNDING_SET", INT2NUM(CAPNG_BOUNDING_SET));
 #if defined(HAVE_CONST_CAPNG_AMBIENT)
+  /* Ambient type */
   rb_define_const(rb_mType, "AMBIENT", INT2NUM(CAPNG_AMBIENT));
 #endif
 }

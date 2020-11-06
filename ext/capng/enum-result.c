@@ -26,8 +26,12 @@ void Init_capng_enum_result(VALUE rb_cCapNG)
   VALUE rb_mResult = rb_define_module_under(rb_cCapNG, "Result");
 
   // capng_result_t enum constants
+  /* Fail to retrieve result */
   rb_define_const(rb_mResult, "FAIL", LONG2NUM(CAPNG_FAIL));
+  /* Retrieve no result */
   rb_define_const(rb_mResult, "NONE", LONG2NUM(CAPNG_NONE));
+  /* Retrieve partial result. Some capabilities are set up. */
   rb_define_const(rb_mResult, "PARTIAL", LONG2NUM(CAPNG_PARTIAL));
+  /* Retrieve partial result. Full capabilities are set up. */
   rb_define_const(rb_mResult, "FULL", LONG2NUM(CAPNG_FULL));
 }

@@ -27,6 +27,8 @@ void Init_capng_enum_action(VALUE rb_cCapNG)
   VALUE rb_mAction = rb_define_module_under(rb_cCapNG, "Action");
 
   // capng_cat_t enum constants
+  /* Mark as DROP action */
   rb_define_const(rb_mAction, "DROP", INT2NUM(CAPNG_DROP));
+  /* Mark as ADD action */
   rb_define_const(rb_mAction, "ADD", INT2NUM(CAPNG_ADD));
 }

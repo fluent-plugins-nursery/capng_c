@@ -11,6 +11,14 @@
 /* See the License for the specific language governing permissions and */
 /* limitations under the License. */
 
+/* clang-format off */
+/*
+ * Document-class: CapNG::State
+ *
+ * Handle CapNG state.
+ */
+/* clang-format on */
+
 #include <capng.h>
 
 struct CapNGState {
@@ -47,6 +55,12 @@ rb_capng_state_alloc(VALUE klass)
   return obj;
 }
 
+/*
+ * Initalize State class.
+ *
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_state_initialize(VALUE self)
 {
@@ -58,7 +72,12 @@ rb_capng_state_initialize(VALUE self)
   return Qnil;
 }
 
-
+/*
+ * Save current capability state.
+ *
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_state_save(VALUE self)
 {
@@ -72,6 +91,13 @@ rb_capng_state_save(VALUE self)
 
   return Qnil;
 }
+
+/*
+ * Restore saved capability state.
+ *
+ * @return [nil]
+ *
+ */
 
 static VALUE
 rb_capng_state_restore(VALUE self)

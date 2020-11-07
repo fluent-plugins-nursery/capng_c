@@ -11,6 +11,15 @@
 /* See the License for the specific language governing permissions and */
 /* limitations under the License. */
 
+/* clang-format off */
+/*
+ * Document-class: CapNG::Print
+ *
+ * Print Linux capabitlities.
+ */
+/* clang-format on */
+
+
 #include <capng.h>
 
 struct CapNGPrint {};
@@ -45,12 +54,26 @@ rb_capng_print_alloc(VALUE klass)
   return obj;
 }
 
+/*
+ * Initalize Print class.
+ *
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_print_initialize(VALUE self)
 {
   return Qnil;
 }
 
+/*
+ * Print capability as text.
+ *
+ * @param rb_where_name_or_type [String or Symbol or Fixnum] Print target.
+ * @param rb_capability_name_or_type [String or Symbol or Fixnum] Capability name or constants
+ * @return [Integer]
+ *
+ */
 static VALUE
 rb_capng_print_caps_text(VALUE self, VALUE rb_where_name_or_type, VALUE rb_capability_name_or_type)
 {
@@ -100,6 +123,14 @@ rb_capng_print_caps_text(VALUE self, VALUE rb_where_name_or_type, VALUE rb_capab
     return rb_str_new2("none");
 }
 
+/*
+ * Print capability as numeric.
+ *
+ * @param rb_where_name_or_type [String or Symbol or Fixnum] Print target.
+ * @param rb_select_name_or_enum [String or Symbol or Fixnum] Select set name or constants
+ * @return [Integer]
+ *
+ */
 static VALUE
 rb_capng_print_caps_numeric(VALUE self, VALUE rb_where_name_or_type, VALUE rb_select_name_or_enum)
 {
@@ -160,6 +191,8 @@ void Init_capng_print(VALUE rb_cCapNG)
   rb_define_method(rb_cCapNGPrint, "caps_numeric", rb_capng_print_caps_numeric, 2);
 
   // capng_print_t enum constants
+  /* Print target into STDOUT. */
   rb_define_const(rb_cCapNGPrint, "STDOUT", LONG2NUM(CAPNG_PRINT_STDOUT));
+  /* Print target into buffer varible. */
   rb_define_const(rb_cCapNGPrint, "BUFFER", LONG2NUM(CAPNG_PRINT_BUFFER));
 }

@@ -13,6 +13,20 @@
 
 #include <capng.h>
 
+/* clang-format off */
+/*
+ * Document-class: CapNG
+ *
+ * CapNG class.
+ *
+ * @example
+ *  require 'capng'
+ *
+ *  @capng = CapNG.new(:current_process)
+ *  @capng.have_capability?(:effective, :dac_read_search)
+ */
+/* clang-format on */
+
 struct CapNG {};
 
 static void capng_free(void* capng);
@@ -45,6 +59,15 @@ rb_capng_alloc(VALUE klass)
   return obj;
 }
 
+/*
+ * Initalize CapNG class.
+ *
+ * @overload initialize(target=nil, pid_or_file=nil)
+ *   @option param target [String or Symbol] Specify capability target.
+ *   @option param pid_or_file [String or Symbol] Querying XPath.
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_initialize(int argc, VALUE *argv, VALUE self)
 {
@@ -96,12 +119,26 @@ rb_capng_initialize(int argc, VALUE *argv, VALUE self)
   return Qnil;
 }
 
+/*
+ * Retrieve capability API status code on [CapNG#initialize] and file capability target.
+ *
+ * @return [@return_code]
+ *
+ */
 static VALUE
 rb_capng_return_code(VALUE self)
 {
   return rb_iv_get(self, "@return_code");
 }
 
+/*
+ * Clear capabilities on specified target.
+ *
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ *
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_clear(VALUE self, VALUE rb_select_name_or_enum)
 {
@@ -126,6 +163,14 @@ rb_capng_clear(VALUE self, VALUE rb_select_name_or_enum)
   return Qnil;
 }
 
+/*
+ * Fill capabilities on specified target.
+ *
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ *
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_fill(VALUE self, VALUE rb_select_name_or_enum)
 {
@@ -150,6 +195,14 @@ rb_capng_fill(VALUE self, VALUE rb_select_name_or_enum)
   return Qnil;
 }
 
+/*
+ * Specify process ID to retrieve other process capabilities.
+ *
+ * @param rb_pid [Fixnum] Process ID.
+ *
+ * @return [nil]
+ *
+ */
 static VALUE
 rb_capng_setpid(VALUE self, VALUE rb_pid)
 {
@@ -160,6 +213,13 @@ rb_capng_setpid(VALUE self, VALUE rb_pid)
   return Qnil;
 }
 
+/*
+ * Specify process ID to retrieve process capabilities.  If not
+ * calling #setpid before, it returns current process' capabilities.
+ *
+ * @return [Boolean]
+ *
+ */
 static VALUE
 rb_capng_get_caps_process(VALUE self)
 {
@@ -172,6 +232,15 @@ rb_capng_get_caps_process(VALUE self)
     return Qfalse;
 }
 
+/*
+ * Update capabilities.
+ *
+ * @param rb_action_name_or_action [Symbol or String or Fixnum] ADD or DROP.
+ * @param rb_capability_name_or_type [Symbol or String or Fixnum] Effective/Inheritable/Permitted/Ambient (If supported) or their combinations
+ * @param rb_capability_or_name [Symbol or String or Fixnum] Capability name or constants. (See also: [CapNG::Capability])
+ *
+ * @return [Boolean]
+ */
 static VALUE
 rb_capng_update(VALUE self,
                 VALUE rb_action_name_or_action, VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
@@ -231,6 +300,14 @@ rb_capng_update(VALUE self,
     return Qfalse;
 }
 
+/*
+ * Apply capabilities on specified target.
+ *
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ *
+ * @return [Boolean]
+ *
+ */
 static VALUE
 rb_capng_apply(VALUE self, VALUE rb_select_name_or_enum)
 {
@@ -259,6 +336,12 @@ rb_capng_apply(VALUE self, VALUE rb_select_name_or_enum)
     return Qfalse;
 }
 
+/*
+ * Lock capabilities.
+ *
+ * @return [Boolean]
+ *
+ */
 static VALUE
 rb_capng_lock(VALUE self)
 {
@@ -272,6 +355,14 @@ rb_capng_lock(VALUE self)
     return Qfalse;
 }
 
+/*
+ *  Change the credentials retaining capabilities.
+  * @param rb_uid [Fixnum] User ID.
+  * @param rb_gid [Fixnum] Group ID.
+  * @param rb_flags [Fixnum] CapNG::Flags constants.
+  *
+  * @see capng_change_id(3)
+ */
 static VALUE
 rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
 {
@@ -285,6 +376,14 @@ rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
     rb_raise(rb_eRuntimeError, "Calling capng_change_id is failed with: (exitcode: %d)\n", result);
 }
 
+/*
+ * Check whether capabilities on specified target or not.
+ *
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ *
+ * @return [Integer]
+ *
+ */
 static VALUE
 rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_name_or_enum)
 {
@@ -309,6 +408,15 @@ rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_name_or_enum)
   return INT2NUM(result);
 }
 
+/*
+ * Check whether capabilities on specified target or not.
+ *
+ * @param rb_capability_name_or_type [Symbol or String or Fixnum] types are EFFECTIVE, INHERITABLE, PERMITTED, and AMBIENT for supported platform.
+ * @param rb_capability_or_name [Symbol or String or Fixnum] Capability name or constants. (See also: [CapNG::Capability])
+ *
+ * @return [Boolean]
+ *
+ */
 static VALUE
 rb_capng_have_capability_p(VALUE self, VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
 {
@@ -352,6 +460,14 @@ rb_capng_have_capability_p(VALUE self, VALUE rb_capability_name_or_type, VALUE r
     return Qfalse;
 }
 
+/*
+ * Retrieve capabilities from file.
+ *
+ * @param rb_file [File] target file object
+ *
+ * @return [Boolean]
+ *
+ */
 static VALUE
 rb_capng_get_caps_file(VALUE self, VALUE rb_file)
 {
@@ -373,6 +489,14 @@ rb_capng_get_caps_file(VALUE self, VALUE rb_file)
     return Qfalse;
 }
 
+/*
+ * Apply capabilities on specified target (file specific version).
+ *
+ * @param rb_file [File] target file object
+ *
+ * @return [Boolean]
+ *
+ */
 static VALUE
 rb_capng_apply_caps_file(VALUE self, VALUE rb_file)
 {

@@ -13,7 +13,8 @@
 
 #include <capng.h>
 
-void Init_capng_enum(VALUE rb_cCapNG)
+void
+Init_capng_enum(VALUE rb_cCapNG)
 {
   Init_capng_enum_action(rb_cCapNG);
   Init_capng_enum_flags(rb_cCapNG);

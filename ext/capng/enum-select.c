@@ -21,7 +21,8 @@
 
 #include <capng.h>
 
-void Init_capng_enum_select(VALUE rb_cCapNG)
+void
+Init_capng_enum_select(VALUE rb_cCapNG)
 {
   VALUE rb_mSelect = rb_define_module_under(rb_cCapNG, "Select");
 

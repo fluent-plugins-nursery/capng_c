@@ -29,21 +29,21 @@
  */
 /* clang-format on */
 
-struct CapNGCapability {};
+struct CapNGCapability
+{};
 
-static void capng_capability_free(void* capng);
+static void
+capng_capability_free(void* capng);
 
-static const rb_data_type_t rb_capng_capability_type = {
-  "capng_capability/c_runtime",
-  {
-    0,
-    capng_capability_free,
-    0,
-  },
-  NULL,
-  NULL,
-  RUBY_TYPED_FREE_IMMEDIATELY
-};
+static const rb_data_type_t rb_capng_capability_type = { "capng_capability/c_runtime",
+                                                         {
+                                                           0,
+                                                           capng_capability_free,
+                                                           0,
+                                                         },
+                                                         NULL,
+                                                         NULL,
+                                                         RUBY_TYPED_FREE_IMMEDIATELY };
 
 static void
 capng_capability_free(void* ptr)
@@ -83,7 +83,7 @@ rb_capng_capability_initialize(VALUE self)
 static VALUE
 rb_capng_capability_to_name(VALUE self, VALUE rb_capability)
 {
-  const char *name = capng_capability_to_name(NUM2UINT(rb_capability));
+  const char* name = capng_capability_to_name(NUM2UINT(rb_capability));
 
   if (name)
     return rb_str_new2(name);
@@ -104,14 +104,15 @@ rb_capng_capability_from_name(VALUE self, VALUE rb_capability_name_or_symbol)
   unsigned int capability;
 
   switch (TYPE(rb_capability_name_or_symbol)) {
-  case T_SYMBOL:
-    capability = capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_name_or_symbol)));
-    break;
-  case T_STRING:
-    capability = capng_name_to_capability(StringValuePtr(rb_capability_name_or_symbol));
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance");
+    case T_SYMBOL:
+      capability =
+        capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_name_or_symbol)));
+      break;
+    case T_STRING:
+      capability = capng_name_to_capability(StringValuePtr(rb_capability_name_or_symbol));
+      break;
+    default:
+      rb_raise(rb_eArgError, "Expected a String or a Symbol instance");
   }
   return INT2NUM(capability);
 }
@@ -128,6 +129,7 @@ Init_capng_capability(VALUE rb_cCapNG)
   rb_define_method(rb_cCapability, "from_name", rb_capng_capability_from_name, 1);
 
   // Capability constants.
+
   /* Make arbitrary changes to file UIDs and GIDs (see chown(2)). */
   rb_define_const(rb_cCapability, "CHOWN", INT2NUM(CAP_CHOWN));
   /*
@@ -135,9 +137,11 @@ Init_capng_capability(VALUE rb_cCapNG)
    * is an abbreviation of "discretionary access control".) */
   rb_define_const(rb_cCapability, "DAC_OVERRIDE", INT2NUM(CAP_DAC_OVERRIDE));
   /*
-   * * Bypass file read permission checks and directory read and execute permission checks;
+   * * Bypass file read permission checks and directory read and execute permission
+   *   checks;
    * * invoke open_by_handle_at(2);
-   * * use the linkat(2) AT_EMPTY_PATH flag to create a link to a file referred to by a file descriptor.
+   * * use the linkat(2) AT_EMPTY_PATH flag to create a link to a file referred to by a
+   *   file descriptor.
    */
   rb_define_const(rb_cCapability, "DAC_READ_SEARCH", INT2NUM(CAP_DAC_READ_SEARCH));
   /*
@@ -231,8 +235,9 @@ Init_capng_capability(VALUE rb_cCapNG)
    */
   rb_define_const(rb_cCapability, "IPC_OWNER", INT2NUM(CAP_IPC_OWNER));
   /*
-   * * Load and unload kernel modules (see init_module(2) and delete_module(2));
-   * * in kernels before 2.6.25: drop capabilities from the system-wide capability bounding set.
+   * * Load and unload kernel modules (see init_module(2) and
+   *   delete_module(2)) in kernels before 2.6.25
+   * * drop capabilities from the system-wide capability bounding set.
    */
   rb_define_const(rb_cCapability, "SYS_MODULE", INT2NUM(CAP_SYS_MODULE));
   /*
@@ -447,7 +452,7 @@ Init_capng_capability(VALUE rb_cCapNG)
   /*
    * Employ various performance-monitoring mechanisms, including:
    *
-   * * call perf_event_open(2);
+   * * call perf_event_open(2)
    * * employ various BPF operations that have performance
    *   implications.
    *

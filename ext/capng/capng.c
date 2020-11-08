@@ -27,21 +27,21 @@
  */
 /* clang-format on */
 
-struct CapNG {};
+struct CapNG
+{};
 
-static void capng_free(void* capng);
+static void
+capng_free(void* capng);
 
-static const rb_data_type_t rb_capng_type = {
-  "capng/capng",
-  {
-    0,
-    capng_free,
-    0,
-  },
-  NULL,
-  NULL,
-  RUBY_TYPED_FREE_IMMEDIATELY
-};
+static const rb_data_type_t rb_capng_type = { "capng/capng",
+                                              {
+                                                0,
+                                                capng_free,
+                                                0,
+                                              },
+                                              NULL,
+                                              NULL,
+                                              RUBY_TYPED_FREE_IMMEDIATELY };
 
 static void
 capng_free(void* ptr)
@@ -54,8 +54,7 @@ rb_capng_alloc(VALUE klass)
 {
   VALUE obj;
   struct CapNG* capng;
-  obj = TypedData_Make_Struct(
-    klass, struct CapNG, &rb_capng_type, capng);
+  obj = TypedData_Make_Struct(klass, struct CapNG, &rb_capng_type, capng);
   return obj;
 }
 
@@ -69,13 +68,13 @@ rb_capng_alloc(VALUE klass)
  *
  */
 static VALUE
-rb_capng_initialize(int argc, VALUE *argv, VALUE self)
+rb_capng_initialize(int argc, VALUE* argv, VALUE self)
 {
   VALUE rb_target, rb_pid_or_file;
   int result = 0;
-  char *target = NULL;
+  char* target = NULL;
   int pid = 0, fd = 0;
-  rb_io_t *fptr = NULL;
+  rb_io_t* fptr = NULL;
 
   rb_scan_args(argc, argv, "02", &rb_target, &rb_pid_or_file);
 
@@ -134,7 +133,8 @@ rb_capng_return_code(VALUE self)
 /*
  * Clear capabilities on specified target.
  *
- * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS,
+ *   BOTH, and AMBIENT for supported platform.
  *
  * @return [nil]
  *
@@ -145,17 +145,19 @@ rb_capng_clear(VALUE self, VALUE rb_select_name_or_enum)
   capng_select_t select = 0;
 
   switch (TYPE(rb_select_name_or_enum)) {
-  case T_SYMBOL:
-    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
-    break;
-  case T_STRING:
-    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
-    break;
-  case T_FIXNUM:
-    select = NUM2INT(rb_select_name_or_enum);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      select =
+        select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+      break;
+    case T_STRING:
+      select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+      break;
+    case T_FIXNUM:
+      select = NUM2INT(rb_select_name_or_enum);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
 
   capng_clear(select);
@@ -166,7 +168,8 @@ rb_capng_clear(VALUE self, VALUE rb_select_name_or_enum)
 /*
  * Fill capabilities on specified target.
  *
- * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS,
+ *   BOTH, and AMBIENT for supported platform.
  *
  * @return [nil]
  *
@@ -177,17 +180,19 @@ rb_capng_fill(VALUE self, VALUE rb_select_name_or_enum)
   capng_select_t select = 0;
 
   switch (TYPE(rb_select_name_or_enum)) {
-  case T_SYMBOL:
-    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
-    break;
-  case T_STRING:
-    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
-    break;
-  case T_FIXNUM:
-    select = NUM2INT(rb_select_name_or_enum);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      select =
+        select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+      break;
+    case T_STRING:
+      select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+      break;
+    case T_FIXNUM:
+      select = NUM2INT(rb_select_name_or_enum);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
 
   capng_fill(select);
@@ -236,14 +241,17 @@ rb_capng_get_caps_process(VALUE self)
  * Update capabilities.
  *
  * @param rb_action_name_or_action [Symbol or String or Fixnum] ADD or DROP.
- * @param rb_capability_name_or_type [Symbol or String or Fixnum] Effective/Inheritable/Permitted/Ambient (If supported) or their combinations
- * @param rb_capability_or_name [Symbol or String or Fixnum] Capability name or constants. (See also: [CapNG::Capability])
+ * @param rb_capability_name_or_type [Symbol or String or Fixnum]
+ *   Effective/Inheritable/Permitted/Ambient (If supported) or their combinations
+ * @param rb_capability_or_name [Symbol or String or Fixnum] Capability name or constants.
+ *
+ * @see: [CapNG::Capability])
  *
  * @return [Boolean]
  */
 static VALUE
-rb_capng_update(VALUE self,
-                VALUE rb_action_name_or_action, VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
+rb_capng_update(VALUE self, VALUE rb_action_name_or_action,
+                VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
 {
   int result = 0;
   unsigned int capability = 0;
@@ -251,45 +259,52 @@ rb_capng_update(VALUE self,
   capng_act_t action = 0;
 
   switch (TYPE(rb_action_name_or_action)) {
-  case T_SYMBOL:
-    action = action_name_to_action_type(RSTRING_PTR(rb_sym2str(rb_action_name_or_action)));
-    break;
-  case T_STRING:
-    action = action_name_to_action_type(StringValuePtr(rb_action_name_or_action));
-    break;
-  case T_FIXNUM:
-    action = NUM2INT(rb_action_name_or_action);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      action =
+        action_name_to_action_type(RSTRING_PTR(rb_sym2str(rb_action_name_or_action)));
+      break;
+    case T_STRING:
+      action = action_name_to_action_type(StringValuePtr(rb_action_name_or_action));
+      break;
+    case T_FIXNUM:
+      action = NUM2INT(rb_action_name_or_action);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
 
   switch (TYPE(rb_capability_name_or_type)) {
-  case T_SYMBOL:
-    capability_type = capability_type_name_to_capability_type(RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
-    break;
-  case T_STRING:
-    capability_type = capability_type_name_to_capability_type(StringValuePtr(rb_capability_name_or_type));
-    break;
-  case T_FIXNUM:
-    capability_type = NUM2INT(rb_capability_name_or_type);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      capability_type = capability_type_name_to_capability_type(
+        RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
+      break;
+    case T_STRING:
+      capability_type = capability_type_name_to_capability_type(
+        StringValuePtr(rb_capability_name_or_type));
+      break;
+    case T_FIXNUM:
+      capability_type = NUM2INT(rb_capability_name_or_type);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
 
   switch (TYPE(rb_capability_or_name)) {
-  case T_SYMBOL:
-    capability = capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
-    break;
-  case T_STRING:
-    capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
-    break;
-  case T_FIXNUM:
-    capability = NUM2INT(rb_capability_or_name);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability constant");
+    case T_SYMBOL:
+      capability =
+        capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
+      break;
+    case T_STRING:
+      capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
+      break;
+    case T_FIXNUM:
+      capability = NUM2INT(rb_capability_or_name);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability constant");
   }
 
   result = capng_update(action, capability_type, capability);
@@ -303,7 +318,8 @@ rb_capng_update(VALUE self,
 /*
  * Apply capabilities on specified target.
  *
- * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum]
+ *   targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
  *
  * @return [Boolean]
  *
@@ -315,17 +331,19 @@ rb_capng_apply(VALUE self, VALUE rb_select_name_or_enum)
   capng_select_t select = 0;
 
   switch (TYPE(rb_select_name_or_enum)) {
-  case T_SYMBOL:
-    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
-    break;
-  case T_STRING:
-    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
-    break;
-  case T_FIXNUM:
-    select = NUM2INT(rb_select_name_or_enum);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      select =
+        select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+      break;
+    case T_STRING:
+      select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+      break;
+    case T_FIXNUM:
+      select = NUM2INT(rb_select_name_or_enum);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
 
   result = capng_apply(select);
@@ -357,11 +375,11 @@ rb_capng_lock(VALUE self)
 
 /*
  *  Change the credentials retaining capabilities.
-  * @param rb_uid [Fixnum] User ID.
-  * @param rb_gid [Fixnum] Group ID.
-  * @param rb_flags [Fixnum] CapNG::Flags constants.
-  *
-  * @see capng_change_id(3)
+ * @param rb_uid [Fixnum] User ID.
+ * @param rb_gid [Fixnum] Group ID.
+ * @param rb_flags [Fixnum] CapNG::Flags constants.
+ *
+ * @see: capng_change_id(3)
  */
 static VALUE
 rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
@@ -373,13 +391,16 @@ rb_capng_change_id(VALUE self, VALUE rb_uid, VALUE rb_gid, VALUE rb_flags)
   if (result == 0)
     return Qtrue;
   else
-    rb_raise(rb_eRuntimeError, "Calling capng_change_id is failed with: (exitcode: %d)\n", result);
+    rb_raise(rb_eRuntimeError,
+             "Calling capng_change_id is failed with: (exitcode: %d)\n",
+             result);
 }
 
 /*
  * Check whether capabilities on specified target or not.
  *
- * @param rb_select_name_or_enum [Symbol or String or Fixnum] targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
+ * @param rb_select_name_or_enum [Symbol or String or Fixnum]
+ *   targets are CAPS, BOUNDS, BOTH, and AMBIENT for supported platform.
  *
  * @return [Integer]
  *
@@ -391,17 +412,19 @@ rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_name_or_enum)
   capng_select_t select = 0;
 
   switch (TYPE(rb_select_name_or_enum)) {
-  case T_SYMBOL:
-    select = select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
-    break;
-  case T_STRING:
-    select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
-    break;
-  case T_FIXNUM:
-    select = NUM2INT(rb_select_name_or_enum);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      select =
+        select_name_to_select_type(RSTRING_PTR(rb_sym2str(rb_select_name_or_enum)));
+      break;
+    case T_STRING:
+      select = select_name_to_select_type(StringValuePtr(rb_select_name_or_enum));
+      break;
+    case T_FIXNUM:
+      select = NUM2INT(rb_select_name_or_enum);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
   result = capng_have_capabilities(select);
 
@@ -411,45 +434,55 @@ rb_capng_have_capabilities_p(VALUE self, VALUE rb_select_name_or_enum)
 /*
  * Check whether capabilities on specified target or not.
  *
- * @param rb_capability_name_or_type [Symbol or String or Fixnum] types are EFFECTIVE, INHERITABLE, PERMITTED, and AMBIENT for supported platform.
- * @param rb_capability_or_name [Symbol or String or Fixnum] Capability name or constants. (See also: [CapNG::Capability])
+ * @param rb_capability_name_or_type [Symbol or String or Fixnum] types are EFFECTIVE,
+ *   INHERITABLE, PERMITTED, and AMBIENT for supported platform.
+ * @param rb_capability_or_name [Symbol or String or Fixnum]
+ *   Capability name or constants.
+ *
+ * @see: [CapNG::Capability]
  *
  * @return [Boolean]
  *
  */
 static VALUE
-rb_capng_have_capability_p(VALUE self, VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
+rb_capng_have_capability_p(VALUE self, VALUE rb_capability_name_or_type,
+                           VALUE rb_capability_or_name)
 {
   int result = 0;
   unsigned int capability = 0;
   capng_type_t capability_type = 0;
 
   switch (TYPE(rb_capability_name_or_type)) {
-  case T_SYMBOL:
-    capability_type = capability_type_name_to_capability_type(RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
-    break;
-  case T_STRING:
-    capability_type = capability_type_name_to_capability_type(StringValuePtr(rb_capability_name_or_type));
-    break;
-  case T_FIXNUM:
-    capability_type = NUM2INT(rb_capability_name_or_type);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability type constant");
+    case T_SYMBOL:
+      capability_type = capability_type_name_to_capability_type(
+        RSTRING_PTR(rb_sym2str(rb_capability_name_or_type)));
+      break;
+    case T_STRING:
+      capability_type = capability_type_name_to_capability_type(
+        StringValuePtr(rb_capability_name_or_type));
+      break;
+    case T_FIXNUM:
+      capability_type = NUM2INT(rb_capability_name_or_type);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability type constant");
   }
 
   switch (TYPE(rb_capability_or_name)) {
-  case T_SYMBOL:
-    capability = capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
-    break;
-  case T_STRING:
-    capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
-    break;
-  case T_FIXNUM:
-    capability = NUM2INT(rb_capability_or_name);
-    break;
-  default:
-    rb_raise(rb_eArgError, "Expected a String or a Symbol instance, or a capability constant");
+    case T_SYMBOL:
+      capability =
+        capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
+      break;
+    case T_STRING:
+      capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
+      break;
+    case T_FIXNUM:
+      capability = NUM2INT(rb_capability_or_name);
+      break;
+    default:
+      rb_raise(rb_eArgError,
+               "Expected a String or a Symbol instance, or a capability constant");
   }
 
   result = capng_have_capability(capability_type, capability);
@@ -472,7 +505,7 @@ static VALUE
 rb_capng_get_caps_file(VALUE self, VALUE rb_file)
 {
   int result = 0, fd = 0;
-  rb_io_t *fptr = NULL;
+  rb_io_t* fptr = NULL;
 
   Check_Type(rb_file, T_FILE);
 
@@ -501,7 +534,7 @@ static VALUE
 rb_capng_apply_caps_file(VALUE self, VALUE rb_file)
 {
   int result = 0, fd = 0;
-  rb_io_t *fptr = NULL;
+  rb_io_t* fptr = NULL;
 
   Check_Type(rb_file, T_FILE);
 
@@ -518,7 +551,6 @@ rb_capng_apply_caps_file(VALUE self, VALUE rb_file)
   else
     return Qfalse;
 }
-
 
 void
 Init_capng(void)

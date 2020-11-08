@@ -21,7 +21,8 @@
 
 #include <capng.h>
 
-void Init_capng_enum_flags(VALUE rb_cCapNG)
+void
+Init_capng_enum_flags(VALUE rb_cCapNG)
 {
   VALUE rb_mFlags = rb_define_module_under(rb_cCapNG, "Flags");
 
@@ -35,9 +36,9 @@ void Init_capng_enum_flags(VALUE rb_cCapNG)
    * already setup prior to changing the uid/gid.*/
   rb_define_const(rb_mFlags, "CLEAR_BOUNDING", LONG2NUM(CAPNG_CLEAR_BOUNDING));
 #if defined(HAVE_CONST_CAPNG_INIT_SUPP_GRP)
-  /* After changing id, initialize any supplement groups that may come with the new account. If given with
-   *  Note: Ubuntu Trusty's libcap-ng-dev doesn't have CAPNG_INIT_SUPP_GRP
-   * constant. */
+  /* After changing id, initialize any supplement groups that may come with the new
+   * account. If given with Note: Ubuntu Trusty's libcap-ng-dev doesn't have
+   * CAPNG_INIT_SUPP_GRP constant. */
   rb_define_const(rb_mFlags, "INIT_SUPP_GRP", LONG2NUM(CAPNG_INIT_SUPP_GRP));
 #endif
 }

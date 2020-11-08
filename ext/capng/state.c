@@ -21,23 +21,23 @@
 
 #include <capng.h>
 
-struct CapNGState {
-  void *state;
+struct CapNGState
+{
+  void* state;
 };
 
-static void capng_state_free(void* capng);
+static void
+capng_state_free(void* capng);
 
-static const rb_data_type_t rb_capng_state_type = {
-  "capng/state",
-  {
-    0,
-    capng_state_free,
-    0,
-  },
-  NULL,
-  NULL,
-  RUBY_TYPED_FREE_IMMEDIATELY
-};
+static const rb_data_type_t rb_capng_state_type = { "capng/state",
+                                                    {
+                                                      0,
+                                                      capng_state_free,
+                                                      0,
+                                                    },
+                                                    NULL,
+                                                    NULL,
+                                                    RUBY_TYPED_FREE_IMMEDIATELY };
 
 static void
 capng_state_free(void* ptr)
@@ -50,8 +50,8 @@ rb_capng_state_alloc(VALUE klass)
 {
   VALUE obj;
   struct CapNGState* capng_state;
-  obj = TypedData_Make_Struct(
-    klass, struct CapNGState, &rb_capng_state_type, capng_state);
+  obj =
+    TypedData_Make_Struct(klass, struct CapNGState, &rb_capng_state_type, capng_state);
   return obj;
 }
 
@@ -82,7 +82,7 @@ static VALUE
 rb_capng_state_save(VALUE self)
 {
   struct CapNGState* capng_state;
-  void *state = NULL;
+  void* state = NULL;
 
   TypedData_Get_Struct(self, struct CapNGState, &rb_capng_state_type, capng_state);
 
@@ -103,7 +103,7 @@ static VALUE
 rb_capng_state_restore(VALUE self)
 {
   struct CapNGState* capng_state;
-  void *state = NULL;
+  void* state = NULL;
 
   TypedData_Get_Struct(self, struct CapNGState, &rb_capng_state_type, capng_state);
 

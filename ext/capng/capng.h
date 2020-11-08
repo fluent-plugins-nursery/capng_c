@@ -19,10 +19,10 @@
 #include <ruby/io.h>
 
 #include <cap-ng.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 extern VALUE rb_cCapNG;
 extern VALUE rb_cCapNGPrint;
@@ -35,10 +35,14 @@ extern VALUE rb_mResult;
 extern VALUE rb_mPrint;
 extern VALUE rb_mFlags;
 
-capng_select_t select_name_to_select_type(char *select_name);
-capng_act_t action_name_to_action_type(char *action_name);
-capng_print_t print_name_to_print_type(char *print_name);
-capng_type_t capability_type_name_to_capability_type(char *capability_name);
+capng_select_t
+select_name_to_select_type(char* select_name);
+capng_act_t
+action_name_to_action_type(char* action_name);
+capng_print_t
+print_name_to_print_type(char* print_name);
+capng_type_t
+capability_type_name_to_capability_type(char* capability_name);
 
 void Init_capng_capability(VALUE);
 void Init_capng_enum(VALUE);

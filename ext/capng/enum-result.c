@@ -21,7 +21,8 @@
 
 #include <capng.h>
 
-void Init_capng_enum_result(VALUE rb_cCapNG)
+void
+Init_capng_enum_result(VALUE rb_cCapNG)
 {
   VALUE rb_mResult = rb_define_module_under(rb_cCapNG, "Result");
 

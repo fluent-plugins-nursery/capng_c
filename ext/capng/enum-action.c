@@ -22,7 +22,8 @@
 
 #include <capng.h>
 
-void Init_capng_enum_action(VALUE rb_cCapNG)
+void
+Init_capng_enum_action(VALUE rb_cCapNG)
 {
   VALUE rb_mAction = rb_define_module_under(rb_cCapNG, "Action");
 

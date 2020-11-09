@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{libcap-ng bindings for Ruby.}
   spec.description   = spec.summary
-  spec.homepage      = "https://github.com/fluent-plugins-nursery/cap-ng_c"
+  spec.homepage      = "https://github.com/fluent-plugins-nursery/capng_c"
   spec.license       = "Apache-2.0"
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 

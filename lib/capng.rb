@@ -5,10 +5,18 @@ class CapNG
   # Predefined Error class.
   class Error < StandardError; end
 
-  alias_method :caps_file_raw, :caps_file # :nodoc:
-  alias_method :apply_caps_file_raw, :apply_caps_file # :nodoc:
-  alias_method :update_raw, :update # :nodoc:
-  alias_method :initialize_raw, :initialize # :nodoc:
+  # :nodoc:
+  # @private
+  alias_method :caps_file_raw, :caps_file
+  # :nodoc:
+  # @private
+  alias_method :apply_caps_file_raw, :apply_caps_file
+  # :nodoc:
+  # @private
+  alias_method :update_raw, :update
+  # :nodoc:
+  # @private
+  alias_method :initialize_raw, :initialize
 
   def initialize(target = nil, pid_or_path = nil)
     if target && pid_or_path.is_a?(Integer)

@@ -193,40 +193,6 @@ class CapNGTest < ::Test::Unit::TestCase
         end
       end
     end
-
-    sub_test_case "w/ initialize args" do
-      test "fd" do
-        Tempfile.create("capng-", mode: 0744) do |tf|
-          capng = CapNG.new(:file, tf)
-          capng.clear(CapNG::Select::BOTH)
-
-          capng.update(CapNG::Action::ADD,
-                       CapNG::Type::EFFECTIVE,
-                       CapNG::Capability::DAC_OVERRIDE)
-          assert_true capng.have_capability?(CapNG::Type::EFFECTIVE, CapNG::Capability::DAC_OVERRIDE)
-          @print = CapNG::Print.new
-          @capability = CapNG::Capability.new
-          assert_equal CapNG::Capability::DAC_OVERRIDE,
-                       @capability.from_name(@print.caps_text(CapNG::Print::BUFFER, CapNG::Type::EFFECTIVE))
-        end
-      end
-
-      test "fd with symbols" do
-        Tempfile.create("capng-", mode: 0744) do |tf|
-          capng = CapNG.new(:file, tf)
-          capng.clear(:both)
-
-          capng.update(:add,
-                       :effective,
-                       :dac_read_search)
-          assert_true capng.have_capability?(:effective, :dac_read_search)
-          @print = CapNG::Print.new
-          @capability = CapNG::Capability.new
-          assert_equal CapNG::Capability::DAC_READ_SEARCH,
-                       @capability.from_name(@print.caps_text(:buffer, :effective))
-        end
-      end
-    end
   end
 
   sub_test_case "Update operation" do

@@ -33,12 +33,6 @@
  *  @capng = CapNG.new(:other_process, 12345)
  *  @capng.have_capability?(:effective, :dac_override)
  *
- * @example
- *  # File capability example
- *  require 'capng'
- *
- *  @capng = CapNG.new(:file, "/path/to/file")
- *  @capng.have_capability?(:effective, :chown)
  */
 /* clang-format on */
 
@@ -85,13 +79,12 @@ rb_capng_alloc(VALUE klass)
 static VALUE
 rb_capng_initialize(int argc, VALUE* argv, VALUE self)
 {
-  VALUE rb_target, rb_pid_or_file;
+  VALUE rb_target, rb_pid;
   int result = 0;
   char* target = NULL;
-  int pid = 0, fd = 0;
-  rb_io_t* fptr = NULL;
+  int pid = 0;
 
-  rb_scan_args(argc, argv, "02", &rb_target, &rb_pid_or_file);
+  rb_scan_args(argc, argv, "02", &rb_target, &rb_pid);
 
   if (NIL_P(rb_target)) {
     return Qnil;
@@ -111,38 +104,17 @@ rb_capng_initialize(int argc, VALUE* argv, VALUE self)
       rb_raise(rb_eRuntimeError, "Couldn't get current process' capability");
     }
   } else if (strcmp(target, "other_process") == 0) {
-    Check_Type(rb_pid_or_file, T_FIXNUM);
+    Check_Type(rb_pid, T_FIXNUM);
 
-    pid = NUM2INT(rb_pid_or_file);
+    pid = NUM2INT(rb_pid);
     capng_setpid(pid);
     result = capng_get_caps_process();
     if (result != 0) {
       rb_raise(rb_eRuntimeError, "Couldn't get current process' capability");
     }
-  } else if (strcmp(target, "file") == 0) {
-    Check_Type(rb_pid_or_file, T_FILE);
-
-    fptr = RFILE(rb_pid_or_file)->fptr;
-    fd = fptr->fd;
-    result = capng_get_caps_fd(fd);
-    /* Just store result into instance variable. */
-    /* This is because capng_get_caps_fd should return 0 if file cap is not set. */
-    rb_iv_set(self, "@return_code", INT2NUM(result));
   }
 
   return Qnil;
-}
-
-/*
- * Retrieve capability API status code on [CapNG#initialize] and file capability target.
- *
- * @return [@return_code]
- *
- */
-static VALUE
-rb_capng_return_code(VALUE self)
-{
-  return rb_iv_get(self, "@return_code");
 }
 
 /*
@@ -583,7 +555,6 @@ Init_capng(void)
   rb_define_alloc_func(rb_cCapNG, rb_capng_alloc);
 
   rb_define_method(rb_cCapNG, "initialize", rb_capng_initialize, -1);
-  rb_define_method(rb_cCapNG, "return_code", rb_capng_return_code, 0);
   rb_define_method(rb_cCapNG, "clear", rb_capng_clear, 1);
   rb_define_method(rb_cCapNG, "fill", rb_capng_fill, 1);
   rb_define_method(rb_cCapNG, "setpid", rb_capng_setpid, 1);

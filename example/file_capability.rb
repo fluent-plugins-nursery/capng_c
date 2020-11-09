@@ -25,7 +25,8 @@ if Process.uid != 0
 end
 
 path = ARGV[0]
-capng = CapNG.new(:file, path)
+capng = CapNG.new
+capng.caps_file(path)
 print = CapNG::Print.new
 puts "capability: #{print.caps_text(:buffer, :effective)}"
 capng.clear(:caps)

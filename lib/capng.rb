@@ -14,17 +14,6 @@ class CapNG
   # :nodoc:
   # @private
   alias_method :update_raw, :update
-  # :nodoc:
-  # @private
-  alias_method :initialize_raw, :initialize
-
-  def initialize(target = nil, pid_or_path = nil)
-    if target && pid_or_path.is_a?(Integer)
-      initialize_raw(target, pid_or_path)
-    else
-      initialize_raw(target, pid_or_path)
-    end
-  end
 
   def caps_file(file_or_string_path)
     if file_or_string_path.is_a?(String) && File.exist?(file_or_string_path)

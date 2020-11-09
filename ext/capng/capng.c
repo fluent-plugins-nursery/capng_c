@@ -269,7 +269,7 @@ rb_capng_update(VALUE self, VALUE rb_action_name_or_action,
                 VALUE rb_capability_name_or_type, VALUE rb_capability_or_name)
 {
   int result = 0;
-  unsigned int capability = 0;
+  int capability = 0;
   capng_type_t capability_type = 0;
   capng_act_t action = 0;
 
@@ -310,10 +310,18 @@ rb_capng_update(VALUE self, VALUE rb_action_name_or_action,
     case T_SYMBOL:
       capability =
         capng_name_to_capability(RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
+      if (capability == -1) {
+        rb_raise(rb_eRuntimeError, "Unknown capability: %s",
+                 RSTRING_PTR(rb_sym2str(rb_capability_or_name)));
+      }
       break;
     case T_STRING:
       capability = capng_name_to_capability(StringValuePtr(rb_capability_or_name));
-      break;
+      if (capability == -1) {
+        rb_raise(rb_eRuntimeError, "Unknown capability: %s",
+                 StringValuePtr(rb_capability_or_name));
+      }
+     break;
     case T_FIXNUM:
       capability = NUM2INT(rb_capability_or_name);
       break;

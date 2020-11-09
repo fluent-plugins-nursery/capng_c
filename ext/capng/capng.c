@@ -20,10 +20,25 @@
  * CapNG class.
  *
  * @example
+ *  # Current process capability example
  *  require 'capng'
  *
  *  @capng = CapNG.new(:current_process)
  *  @capng.have_capability?(:effective, :dac_read_search)
+ *
+ * @example
+ *  # Other process capability example
+ *  require 'capng'
+ *
+ *  @capng = CapNG.new(:other_process, 12345)
+ *  @capng.have_capability?(:effective, :dac_override)
+ *
+ * @example
+ *  # File capability example
+ *  require 'capng'
+ *
+ *  @capng = CapNG.new(:file, "/path/to/file")
+ *  @capng.have_capability?(:effective, :chown)
  */
 /* clang-format on */
 

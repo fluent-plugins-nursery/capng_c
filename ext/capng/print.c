@@ -16,6 +16,12 @@
  * Document-class: CapNG::Print
  *
  * Print Linux capabitlities.
+ *
+ * @example
+ *  require 'capng'
+ *
+ *  @print = CapNG::Print.new
+ *  @print.caps_text(:buffer, :effective)
  */
 /* clang-format on */
 

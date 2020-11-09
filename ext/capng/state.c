@@ -16,6 +16,14 @@
  * Document-class: CapNG::State
  *
  * Handle CapNG state.
+ *
+ * @example
+ *  require 'capng'
+ *
+ *  @state = CapNG::State.new
+ *  @state.save
+ *  # Some capability operations
+ *  @state.restore
  */
 /* clang-format on */
 

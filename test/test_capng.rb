@@ -68,6 +68,17 @@ class CapNGTest < ::Test::Unit::TestCase
         assert CapNG::Flags::INIT_SUPP_GRP
       end
     end
+
+    test "capability" do
+      capability = CapNG::Capability.new
+      capabilities = {}
+      capability.each do |code, name|
+        capabilities[code] = name
+      end
+
+      assert_true capabilities.include?(CapNG::Capability::CHOWN)
+      assert_true capabilities.include?(CapNG::Capability::FSETID)
+    end
   end
 
   sub_test_case "Basic operation" do

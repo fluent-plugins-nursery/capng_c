@@ -44,6 +44,13 @@ print_name_to_print_type(char* print_name);
 capng_type_t
 capability_type_name_to_capability_type(char* capability_name);
 
+typedef struct {
+  int code;
+  const char* name;
+} CapabilityInfo;
+
+extern CapabilityInfo capabilityInfoTable[];
+
 void Init_capng_capability(VALUE);
 void Init_capng_enum(VALUE);
 void Init_capng_enum_action(VALUE);

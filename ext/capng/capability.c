@@ -117,6 +117,27 @@ rb_capng_capability_from_name(VALUE self, VALUE rb_capability_name_or_symbol)
   return INT2NUM(capability);
 }
 
+/*
+ * Obtain capability code and name pairs with enumerable.
+ *
+ * @yield [Integer, String]
+ * @return [nil]
+ *
+ */
+static VALUE
+rb_capng_capability_each(VALUE self)
+{
+  RETURN_ENUMERATOR(self, 0, 0);
+
+  for (int i = 0; capabilityInfoTable[i].name != NULL; i++) {
+    rb_yield_values(2,
+                    INT2NUM(capabilityInfoTable[i].code),
+                    rb_str_new2(capabilityInfoTable[i].name));
+  }
+
+  return Qnil;
+}
+
 void
 Init_capng_capability(VALUE rb_cCapNG)
 {
@@ -127,6 +148,7 @@ Init_capng_capability(VALUE rb_cCapNG)
   rb_define_method(rb_cCapability, "initialize", rb_capng_capability_initialize, 0);
   rb_define_method(rb_cCapability, "to_name", rb_capng_capability_to_name, 1);
   rb_define_method(rb_cCapability, "from_name", rb_capng_capability_from_name, 1);
+  rb_define_method(rb_cCapability, "each", rb_capng_capability_each, 0);
 
   // Capability constants.
 

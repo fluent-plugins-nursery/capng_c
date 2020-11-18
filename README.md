@@ -8,6 +8,9 @@ libcap-ng bindings for Ruby.
 
 ## Prerequisites
 
+* Building C environment
+  * build-essential on Debian GNU/Linux and Ubuntu
+  * "Development Tools" package group on CentOS 7/8, Fedora 33, AmazonLinux 2
 * pkg-config package for linking libcap-ng library
 * libcap-ng and its development packages
   * libcap-ng-dev on Debian GNU/Linux and Ubuntu

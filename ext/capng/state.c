@@ -50,6 +50,11 @@ static const rb_data_type_t rb_capng_state_type = { "capng/state",
 static void
 capng_state_free(void* ptr)
 {
+  struct CapNGState* state = (struct CapNGState*)ptr;
+  if (state) {
+    state->state = NULL;
+  }
+
   xfree(ptr);
 }
 

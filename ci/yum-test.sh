@@ -23,7 +23,7 @@ case ${distribution} in
         USE_SCL=1
         ;;
       *)
-        DNF="dnf --enablerepo=PowerTools"
+        DNF="dnf --enablerepo=powertools"
         ;;
     esac
     ;;

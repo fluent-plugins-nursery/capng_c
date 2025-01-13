@@ -53,6 +53,7 @@ else
            rubygems \
            rpm-build
 fi
+${DNF} install -y libyaml-devel
 ${DNF} install -y libcap-ng-devel
 
 if [ $USE_SCL -eq 1 ]; then

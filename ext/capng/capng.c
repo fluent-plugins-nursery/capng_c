@@ -67,6 +67,19 @@ rb_capng_alloc(VALUE klass)
   return obj;
 }
 
+static int
+capng_get_file_descriptor(VALUE rb_file)
+{
+#ifdef HAVE_RB_IO_DESCRIPTOR
+  return rb_io_descriptor(rb_file);
+#else
+  rb_io_t* fptr = NULL;
+
+  fptr = RFILE(rb_file)->fptr;
+  return fptr->fd;
+#endif
+}
+
 /*
  * Initalize CapNG class.
  *
@@ -500,15 +513,13 @@ static VALUE
 rb_capng_get_caps_file(VALUE self, VALUE rb_file)
 {
   int result = 0, fd = 0;
-  rb_io_t* fptr = NULL;
 
   Check_Type(rb_file, T_FILE);
 
   if (NIL_P(rb_file)) {
     return Qfalse;
   }
-  fptr = RFILE(rb_file)->fptr;
-  fd = fptr->fd;
+  fd = capng_get_file_descriptor(rb_file);
   result = capng_get_caps_fd(fd);
 
   if (result == 0)
@@ -529,7 +540,6 @@ static VALUE
 rb_capng_apply_caps_file(VALUE self, VALUE rb_file)
 {
   int result = 0, fd = 0;
-  rb_io_t* fptr = NULL;
 
   Check_Type(rb_file, T_FILE);
 
@@ -537,8 +547,7 @@ rb_capng_apply_caps_file(VALUE self, VALUE rb_file)
     return Qfalse;
   }
 
-  fptr = RFILE(rb_file)->fptr;
-  fd = fptr->fd;
+  fd = capng_get_file_descriptor(rb_file);
   result = capng_apply_caps_fd(fd);
 
   if (result == 0)

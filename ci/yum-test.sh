@@ -34,6 +34,12 @@ case ${distribution} in
         ;;
     esac
     ;;
+  rocky)
+    DNF="dnf --enablerepo=powertools"
+    ;;
+  almalinux)
+    DNF="dnf --enablerepo=crb"
+    ;;
 esac
 
 ${DNF} groupinstall -y "Development Tools"

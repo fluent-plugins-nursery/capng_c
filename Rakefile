@@ -12,9 +12,7 @@ end
 
 require "rake/extensiontask"
 
-spec = eval File.read("capng_c.gemspec")
-
-Rake::ExtensionTask.new("capng", spec) do |ext|
+Rake::ExtensionTask.new("capng") do |ext|
   ext.lib_dir = "lib/capng"
 end
 

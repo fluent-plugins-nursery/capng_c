@@ -34,6 +34,12 @@ case ${distribution} in
         ;;
     esac
     ;;
+  rocky)
+    DNF="dnf --enablerepo=powertools"
+    ;;
+  almalinux)
+    DNF="dnf --enablerepo=crb"
+    ;;
 esac
 
 ${DNF} groupinstall -y "Development Tools"
@@ -53,6 +59,7 @@ else
            rubygems \
            rpm-build
 fi
+${DNF} install -y libyaml-devel
 ${DNF} install -y libcap-ng-devel
 
 if [ $USE_SCL -eq 1 ]; then
@@ -60,5 +67,5 @@ if [ $USE_SCL -eq 1 ]; then
     export MANPATH=
     cd /capng && source /opt/rh/rh-ruby26/enable && gem install bundler --no-document && bundle install && bundle exec rake
 else
-    cd /capng && gem install bundler --no-document && bundle install && bundle exec rake
+    cd /capng && gem install bundler -v 2.3.27 --no-document && bundle install && bundle exec rake
 fi

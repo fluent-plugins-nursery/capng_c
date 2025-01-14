@@ -7,9 +7,9 @@ export DEBIAN_FRONTEND=noninteractive
 apt update
 apt install -V -y lsb-release
 
-apt install -V -y ruby-dev git build-essential pkg-config
+apt install -V -y ruby-dev git build-essential pkg-config libyaml-dev
 apt install -V -y libcap-ng-dev
 cd /capng && \
-    gem install bundler --no-document && \
+    gem install bundler -v 2.3.27 --no-document && \
     bundle install && \
     bundle exec rake

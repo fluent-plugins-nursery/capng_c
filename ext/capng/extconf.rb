@@ -20,6 +20,10 @@ includedir = RbConfig::CONFIG["includedir"]
 
 dir_config("capng", includedir, libdir)
 
+unless find_executable("pkg-config")
+  raise "Require pkg-config due to install capng_c gem. Please install pkg-config."
+end
+
 pkg_config("libcap-ng")
 $CFLAGS << " -Wall -std=c99 -fPIC "
 # $CFLAGS << " -g -O0"

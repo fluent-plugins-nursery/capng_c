@@ -9,12 +9,12 @@ jobs:
       fail-fast: false
       matrix:
         label:
-          - Debian GNU/Linux Buster amd64
+          - Debian GNU/Linux Bookworm amd64
           - Ubuntu Bionic amd64
           - Ubuntu Focal amd64
         include:
-          - label: Debian GNU/Linux Buster amd64
-            test-docker-image: debian:buster
+          - label: Debian GNU/Linux Bookworm amd64
+            test-docker-image: debian:bookworm
             test-script: ci/apt-test.sh
           - label: Ubuntu Bionic amd64
             test-docker-image: ubuntu:bionic

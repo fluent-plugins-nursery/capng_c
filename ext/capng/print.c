@@ -129,8 +129,11 @@ rb_capng_print_caps_text(VALUE self, VALUE rb_where_name_or_type,
       result = capng_print_caps_text(CAPNG_PRINT_BUFFER, capability_type);
   }
 
-  if (result)
-    return rb_str_new2(result);
+  if (result) {
+    VALUE obj = rb_str_new2(result);
+    free(result);
+    return obj;
+  }
   else
     return rb_str_new2("none");
 }
@@ -191,8 +194,11 @@ rb_capng_print_caps_numeric(VALUE self, VALUE rb_where_name_or_type,
       result = capng_print_caps_numeric(CAPNG_PRINT_BUFFER, select);
   }
 
-  if (result)
-    return rb_str_new2(result);
+  if (result) {
+    VALUE obj = rb_str_new2(result);
+    free(result);
+    return obj;
+  }
   else
     return rb_str_new2("none");
 }

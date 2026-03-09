@@ -18,4 +18,11 @@ end
 
 CLEAN.include('lib/capng/capng.*')
 
+if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.0.0') && RUBY_PLATFORM.include?('linux')
+  require 'ruby_memcheck'
+  namespace :test do
+    RubyMemcheck::TestTask.new(valgrind: :compile)
+  end
+end
+
 task :default => [:clobber, :compile, :test]

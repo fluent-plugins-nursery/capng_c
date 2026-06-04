@@ -1,8 +1,8 @@
 # Capng_c
 
-![Multiple Ruby version tests](https://github.com/fluent-plugins-nursery/capng_c/workflows/Multiple%20Ruby%20version%20tests/badge.svg?branch=main)
-![Apt based Linux](https://github.com/fluent-plugins-nursery/capng_c/workflows/Apt%20based%20Linux/badge.svg?branch=main)
-![Yum based Linux](https://github.com/fluent-plugins-nursery/capng_c/workflows/Yum%20based%20Linux/badge.svg?branch=main)
+[![Multiple Ruby version tests](https://github.com/fluent-plugins-nursery/capng_c/actions/workflows/linux.yml/badge.svg)](https://github.com/fluent-plugins-nursery/capng_c/actions/workflows/linux.yml)
+[![Apt based Linux](https://github.com/fluent-plugins-nursery/capng_c/actions/workflows/apt.yml/badge.svg)](https://github.com/fluent-plugins-nursery/capng_c/actions/workflows/apt.yml)
+[![Yum based Linux](https://github.com/fluent-plugins-nursery/capng_c/actions/workflows/yum.yml/badge.svg)](https://github.com/fluent-plugins-nursery/capng_c/actions/workflows/yum.yml)
 
 libcap-ng bindings for Ruby.
 

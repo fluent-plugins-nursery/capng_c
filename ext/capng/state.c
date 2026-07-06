@@ -116,12 +116,15 @@ static VALUE
 rb_capng_state_restore(VALUE self)
 {
   struct CapNGState* capng_state;
-  void* state = NULL;
 
   TypedData_Get_Struct(self, struct CapNGState, &rb_capng_state_type, capng_state);
 
-  state = capng_state->state;
-  capng_restore_state(&state);
+  /* Pass the struct field itself so capng_restore_state() frees the block and
+   * resets our pointer to NULL. Passing a local copy (the previous behaviour)
+   * left capng_state->state dangling, causing a use-after-free / double-free on
+   * a second #restore. With the field NULLed, a repeated #restore is a safe
+   * no-op because libcap-ng ignores a NULL saved state. */
+  capng_restore_state(&capng_state->state);
 
   return Qnil;
 }

@@ -52,7 +52,14 @@ capng_state_free(void* ptr)
 {
   struct CapNGState* state = (struct CapNGState*)ptr;
   if (state) {
-    state->state = NULL;
+    /* Release any saved libcap-ng state that was never restored, otherwise the
+     * heap block returned by capng_save_state() leaks on GC. capng_c never
+     * stages additional groups, so the saved state owns no nested allocations
+     * and a plain free() fully releases it. */
+    if (state->state) {
+      free(state->state);
+      state->state = NULL;
+    }
   }
 
   xfree(ptr);
@@ -95,12 +102,16 @@ static VALUE
 rb_capng_state_save(VALUE self)
 {
   struct CapNGState* capng_state;
-  void* state = NULL;
 
   TypedData_Get_Struct(self, struct CapNGState, &rb_capng_state_type, capng_state);
 
-  state = capng_save_state();
-  capng_state->state = state;
+  /* Free any previously saved state so repeated #save does not leak. */
+  if (capng_state->state) {
+    free(capng_state->state);
+    capng_state->state = NULL;
+  }
+
+  capng_state->state = capng_save_state();
 
   return Qnil;
 }

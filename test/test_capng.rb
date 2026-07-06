@@ -117,6 +117,25 @@ class CapNGTest < ::Test::Unit::TestCase
         @state.restore
       end
     end
+
+    # Regression: a second #restore used to reuse a dangling pointer and crash
+    # with a double-free (SIGABRT). It must now be a safe no-op.
+    test "restore is safe to call twice" do
+      @state = CapNG::State.new
+      assert_nothing_raised do
+        @state.save
+        @state.restore
+        @state.restore
+      end
+    end
+
+    # Regression: restoring without a prior save must not crash.
+    test "restore without save is a no-op" do
+      @state = CapNG::State.new
+      assert_nothing_raised do
+        @state.restore
+      end
+    end
   end
 
   sub_test_case "Print" do

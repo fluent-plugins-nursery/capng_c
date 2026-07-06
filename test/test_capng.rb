@@ -136,6 +136,16 @@ class CapNGTest < ::Test::Unit::TestCase
         @state.restore
       end
     end
+
+    # Regression: repeated #save must not crash and must not leak the previous
+    # saved state (the previous block is released before overwriting).
+    test "repeated save then restore" do
+      @state = CapNG::State.new
+      assert_nothing_raised do
+        3.times { @state.save }
+        @state.restore
+      end
+    end
   end
 
   sub_test_case "Print" do

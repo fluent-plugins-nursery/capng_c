@@ -232,6 +232,22 @@ class CapNGTest < ::Test::Unit::TestCase
                        @capability.from_name(@print.caps_text(:buffer, :effective))
         end
       end
+
+      test "caps_file on an uninitialized stream raises instead of crashing" do
+        assert_raise(IOError) do
+          @capng.caps_file(File.allocate)
+        end
+      end
+
+      test "caps_file on a closed stream raises instead of crashing" do
+        tf = Tempfile.create("capng-")
+        tf.close
+        assert_raise(IOError) do
+          @capng.caps_file(tf)
+        end
+      ensure
+        File.unlink(tf.path) if tf && File.exist?(tf.path)
+      end
     end
   end
 

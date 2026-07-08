@@ -75,7 +75,7 @@ capng_get_file_descriptor(VALUE rb_file)
 #else
   rb_io_t* fptr = NULL;
 
-  fptr = RFILE(rb_file)->fptr;
+  GetOpenFile(rb_file, fptr);
   return fptr->fd;
 #endif
 }

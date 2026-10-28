@@ -14,6 +14,7 @@
 #ifndef _CAPNG_H_
 #define _CAPNG_H_
 
+#include <stdbool.h>
 #include <ruby.h>
 #include <ruby/encoding.h>
 #include <ruby/io.h>
